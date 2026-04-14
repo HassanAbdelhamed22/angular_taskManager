@@ -1,0 +1,46 @@
+.task-list {
+  margin-top: 28px;
+  margin-bottom: 40px;
+
+  padding: 28px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.list-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.btn-add {
+  padding: 12px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Inter', Arial, sans-serif;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-add i {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.btn-add:hover {
+  background-color: #2563eb;
+}
+
+.btn-add:active {
+  background-color: #1d4ed8;
+}

@@ -1,0 +1,45 @@
+<div class="task-input">
+  <h2>Add a New Task</h2>
+
+  <div class="form-group">
+    <label for="task-title">Title</label>
+    <input id="task-title" type="text" placeholder="What needs to be done?" />
+  </div>
+
+  <div class="form-group">
+    <label for="task-desc">Description</label>
+    <textarea id="task-desc" placeholder="Add some details..." rows="3"></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="task-priority">Priority</label>
+      <select id="task-priority">
+        <option>Low</option>
+        <option selected>Medium</option>
+        <option>High</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="task-date">Due Date</label>
+      <input id="task-date" type="date" />
+    </div>
+
+    <div class="form-group">
+      <label for="task-category">Category</label>
+      <select id="task-category">
+        <option>Work</option>
+        <option>Personal</option>
+        <option>Study</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="task-tags">Tags</label>
+    <input id="task-tags" type="text" placeholder="e.g. angular, homework, urgent" />
+  </div>
+
+  <button class="btn-add" type="button"><i class="fas fa-plus"></i> Add Task</button>
+</div>
