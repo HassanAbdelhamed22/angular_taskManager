@@ -1,0 +1,22 @@
+<div class="carousel-container">
+  <div class="carousel-slides">
+    <div class="carousel-slide" [class.active]="currentIndex === 0">
+      <img [src]="images[0]" alt="Carousel image 1" />
+    </div>
+    <div class="carousel-slide" [class.active]="currentIndex === 1">
+      <img [src]="images[1]" alt="Carousel image 2" />
+    </div>
+    <div class="carousel-slide" [class.active]="currentIndex === 2">
+      <img [src]="images[2]" alt="Carousel image 3" />
+    </div>
+  </div>
+
+  <button class="carousel-btn prev" (click)="prev()"><</button>
+  <button class="carousel-btn next" (click)="next()">></button>
+
+  <div class="carousel-indicators">
+    <span class="dot" [class.active]="currentIndex === 0" (click)="goTo(0)"></span>
+    <span class="dot" [class.active]="currentIndex === 1" (click)="goTo(1)"></span>
+    <span class="dot" [class.active]="currentIndex === 2" (click)="goTo(2)"></span>
+  </div>
+</div>
