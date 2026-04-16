@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Task {
+  id: string;
   title: string;
   description: string;
   priority: string;
@@ -28,6 +30,7 @@ export class TaskInputComponent {
 
   addTask() {
     const newTask: Task = {
+      id: uuidv4(),
       title: this.title,
       description: this.description,
       priority: this.priority,
