@@ -44,3 +44,9 @@
 .btn-add:active {
   background-color: #1d4ed8;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

@@ -1,10 +1,19 @@
 <div class="task-list">
   <div class="list-header">
     <h2>Your Tasks</h2>
-    <button class="btn-add" type="button"><i class="fas fa-plus"></i> Add Task</button>
+    <div class="header-actions">
+      <app-tabs [currentFilter]="filter" (filterChange)="setFilter($event)"></app-tabs>
+      <button class="btn-add" type="button"><i class="fas fa-plus"></i> Add Task</button>
+    </div>
   </div>
 
-  <app-task-card></app-task-card>
-  <app-task-card></app-task-card>
-  <app-task-card></app-task-card>
+  @if (filter === 'all' || filter === 'not_done') {
+    <app-task-card></app-task-card>
+  }
+  @if (filter === 'all' || filter === 'done') {
+    <app-task-card></app-task-card>
+  }
+  @if (filter === 'all' || filter === 'not_done') {
+    <app-task-card></app-task-card>
+  }
 </div>
