@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Task } from '../../types';
 
 @Component({
   selector: 'app-task-card',
+  imports: [CommonModule],
   templateUrl: './taskCard.html',
   styleUrls: ['./taskCard.css'],
 })

@@ -1,50 +1,128 @@
 .task-card {
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 10px;
+  background-color: #ffffff;
+  border: 1px solid #eaeaeb;
+  border-left: 3.5px solid #e3e0da;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  transition: border-color 0.2s;
+  box-shadow: 0 1px 4px rgba(63, 58, 52, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  animation: cardIn 0.35s ease both;
 }
 
 .task-card:hover {
-  border-color: #c5c5c5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(63, 58, 52, 0.07);
 }
 
-/* checkbox */
+/* Priority left borders */
+.task-card.priority-border-high {
+  border-left-color: #d97070;
+}
+
+.task-card.priority-border-medium {
+  border-left-color: #d4a36a;
+}
+
+.task-card.priority-border-low {
+  border-left-color: #74a376;
+}
+
+/* Done state */
+.task-card.is-done {
+  opacity: 0.65;
+}
+
+.task-card.is-done .card-body h3 {
+  text-decoration: line-through;
+  color: #928b81;
+}
+
+.task-card.is-done .card-body .description {
+  text-decoration: line-through;
+  color: #b5afa6;
+}
+
+/* Custom checkbox */
 .card-left {
   padding-top: 2px;
 }
 
-.task-checkbox {
-  width: 18px;
-  height: 18px;
+.custom-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  accent-color: #3b82f6;
 }
 
-/* body */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #d0ccc5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.checkmark i {
+  font-size: 0.6rem;
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background-color: #6b8e82;
+  border-color: #6b8e82;
+  box-shadow: 0 2px 6px rgba(107, 142, 130, 0.35);
+}
+
+.custom-checkbox input:checked + .checkmark i {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.custom-checkbox:hover .checkmark {
+  border-color: #6b8e82;
+}
+
+/* Card body */
 .card-body {
   flex: 1;
+  min-width: 0;
 }
 
 .card-body h3 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1d1d1f;
-  margin-bottom: 3px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #3f3a34;
+  margin-bottom: 4px;
+  transition: color 0.2s ease;
 }
 
 .card-body .description {
-  font-size: 0.84rem;
-  color: #777;
-  margin-bottom: 8px;
+  font-size: 0.86rem;
+  color: #7a736a;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  transition: color 0.2s ease;
 }
 
-/* meta badges */
 .card-meta {
   display: flex;
   gap: 8px;
@@ -53,80 +131,110 @@
 }
 
 .badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .priority-high {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: #fdf2f2;
+  color: #d97070;
 }
 
 .priority-medium {
-  background-color: #fef3c7;
-  color: #d97706;
+  background-color: #fffaf0;
+  color: #d4a36a;
 }
 
 .priority-low {
-  background-color: #dcfce7;
-  color: #16a34a;
+  background-color: #f2f9f1;
+  color: #74a376;
 }
 
 .category {
-  background-color: #ede9fe;
-  color: #7c3aed;
+  background-color: #f5f3fa;
+  color: #8c7aa8;
 }
 
 .due-date {
-  font-size: 0.78rem;
-  color: #999;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #928b81;
+}
+
+.due-date i {
+  margin-right: 3px;
 }
 
 .tags-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .badge.tag {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-  font-size: 0.8rem;
-  padding: 4px 10px;
+  background-color: #f4f3ef;
+  color: #7a736a;
+  border: 1px solid #e9e7e1;
+  font-weight: 600;
+  padding: 3px 10px;
   border-radius: 20px;
+  font-size: 0.72rem;
+  text-transform: none;
 }
 
+.badge.tag i {
+  font-size: 0.55rem;
+  opacity: 0.5;
+}
+
+/* Action buttons */
 .icons {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-/* delete button */
+.task-card:hover .icons {
+  opacity: 1;
+}
+
 .btn-delete,
 .btn-edit {
   background: none;
   border: none;
-  font-size: 1rem;
-  color: #ccc;
+  font-size: 0.85rem;
+  color: #c9c5be;
   cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 4px;
-  transition:
-    color 0.2s,
-    background-color 0.2s;
+  padding: 7px 8px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background-color 0.2s ease;
   line-height: 1;
 }
 
-.btn-delete:hover {
-  color: #ef4444;
-  background-color: #fef2f2;
+.btn-edit:hover {
+  color: #6b8e82;
+  background-color: rgba(107, 142, 130, 0.08);
 }
 
-.btn-edit:hover {
-  color: #3b82f6;
-  background-color: #f0f9ff;
+.btn-delete:hover {
+  color: #d97070;
+  background-color: rgba(217, 112, 112, 0.08);
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

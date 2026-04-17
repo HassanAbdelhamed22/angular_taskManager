@@ -1,28 +1,47 @@
-<div class="task-card">
+<div
+  class="task-card"
+  [class.is-done]="task.isDone"
+  [class.priority-border-high]="task.priority === 'High'"
+  [class.priority-border-medium]="task.priority === 'Medium'"
+  [class.priority-border-low]="task.priority === 'Low'"
+>
   <div class="card-left">
-    <input type="checkbox" class="task-checkbox" [checked]="task.isDone" (change)="toggleDone()" />
+    <label class="custom-checkbox">
+      <input type="checkbox" [checked]="task.isDone" (change)="toggleDone()" />
+      <span class="checkmark">
+        <i class="fas fa-check"></i>
+      </span>
+    </label>
   </div>
   <div class="card-body">
     <h3>{{ task.title }}</h3>
     <p class="description">{{ task.description }}</p>
     <div class="card-meta">
-      <span class="badge priority-high">{{ task.priority }}</span>
+      <span
+        class="badge"
+        [class.priority-high]="task.priority === 'High'"
+        [class.priority-medium]="task.priority === 'Medium'"
+        [class.priority-low]="task.priority === 'Low'"
+        >{{ task.priority }}</span
+      >
       <span class="badge category">{{ task.category }}</span>
-      <span class="due-date"><i class="fas fa-calendar"></i> {{ task.dueDate }}</span>
+      <span class="due-date" *ngIf="task.dueDate"
+        ><i class="far fa-calendar"></i> {{ task.dueDate }}</span
+      >
     </div>
 
-    <div class="tags-container">
+    <div class="tags-container" *ngIf="getTags().length > 0">
       @for (tag of getTags(); track tag) {
         <span class="badge tag"><i class="fas fa-hashtag"></i> {{ tag }}</span>
       }
     </div>
   </div>
   <div class="icons">
-    <button class="btn-delete" title="Delete task" (click)="deleteTaskFn()">
-      <i class="fas fa-trash"></i>
-    </button>
     <button class="btn-edit" title="Edit task" (click)="editTaskFn()">
-      <i class="fas fa-edit"></i>
+      <i class="fas fa-pen"></i>
+    </button>
+    <button class="btn-delete" title="Delete task" (click)="deleteTaskFn()">
+      <i class="fas fa-trash-alt"></i>
     </button>
   </div>
 </div>
