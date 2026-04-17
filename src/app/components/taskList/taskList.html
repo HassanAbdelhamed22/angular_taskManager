@@ -7,13 +7,7 @@
     </div>
   </div>
 
-  @if (filter === 'all' || filter === 'not_done') {
-    <app-task-card></app-task-card>
-  }
-  @if (filter === 'all' || filter === 'done') {
-    <app-task-card></app-task-card>
-  }
-  @if (filter === 'all' || filter === 'not_done') {
-    <app-task-card></app-task-card>
-  }
+  <div *ngFor="let task of getFilteredTasks(); trackBy: trackByFn">
+    <app-task-card [task]="task"></app-task-card>
+  </div>
 </div>

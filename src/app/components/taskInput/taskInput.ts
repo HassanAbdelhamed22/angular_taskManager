@@ -1,16 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  priority: string;
-  dueDate: string;
-  category: string;
-  tags: string;
-}
+import { Task } from '../../types';
 
 @Component({
   selector: 'app-task-input',
@@ -19,6 +10,8 @@ interface Task {
   imports: [FormsModule],
 })
 export class TaskInputComponent {
+  @Output() taskCreated = new EventEmitter<Task>();
+
   title = '';
   description = '';
   priority = 'Medium';
@@ -37,10 +30,10 @@ export class TaskInputComponent {
       dueDate: this.dueDate,
       category: this.category,
       tags: this.tags,
+      isDone: false,
     };
 
-    this.tasks.push(newTask);
-    console.log(this.tasks);
+    this.taskCreated.emit(newTask);
 
     this.resetForm();
   }

@@ -1,5 +1,15 @@
 <div class="tabs">
-  <button class="tab-btn" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
-  <button class="tab-btn" [class.active]="currentFilter === 'not_done'" (click)="setFilter('not_done')">Not Done</button>
-  <button class="tab-btn" [class.active]="currentFilter === 'done'" (click)="setFilter('done')">Done</button>
+  <button class="tab-btn" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">
+    All
+  </button>
+  <button
+    class="tab-btn"
+    [class.active]="currentFilter === 'not_done'"
+    (click)="setFilter('not_done')"
+  >
+    Not Done
+  </button>
+  <button class="tab-btn" [class.active]="currentFilter === 'done'" (click)="setFilter('done')">
+    Done
+  </button>
 </div>

@@ -3,12 +3,12 @@
     <input type="checkbox" class="task-checkbox" />
   </div>
   <div class="card-body">
-    <h3>Finish Angular Project</h3>
-    <p class="description">Build components and UI</p>
+    <h3>{{ task.title }}</h3>
+    <p class="description">{{ task.description }}</p>
     <div class="card-meta">
-      <span class="badge priority-high">High</span>
-      <span class="badge category">Work</span>
-      <span class="due-date"><i class="fas fa-calendar"></i> Apr 20, 2026</span>
+      <span class="badge priority-high">{{ task.priority }}</span>
+      <span class="badge category">{{ task.category }}</span>
+      <span class="due-date"><i class="fas fa-calendar"></i> {{ task.dueDate }}</span>
     </div>
   </div>
   <button class="btn-delete" title="Delete task"><i class="fas fa-trash"></i></button>

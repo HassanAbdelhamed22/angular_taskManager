@@ -1,9 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeaderComponent } from './components/header/header';
 import { TaskListComponent } from './components/taskList/taskList';
 import { FooterComponent } from './components/footer/footer';
 import { TaskInputComponent } from './components/taskInput/taskInput';
 import { HomeComponent } from './components/home/home';
+import { Task } from './types';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +13,9 @@ import { HomeComponent } from './components/home/home';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('task-manager');
+  tasks: Task[] = [];
+
+  addTask(task: Task) {
+    this.tasks.push(task);
+  }
 }
