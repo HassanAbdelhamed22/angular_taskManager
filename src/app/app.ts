@@ -18,4 +18,8 @@ export class App {
   addTask(task: Task) {
     this.tasks.push(task);
   }
+
+  onStatusChanged(taskId: string) {
+    alert(`Task ${taskId} status changed`);
+  }
 }

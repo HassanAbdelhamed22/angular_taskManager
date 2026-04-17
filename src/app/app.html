@@ -2,6 +2,6 @@
 <main>
   <app-home></app-home>
   <app-task-input (taskCreated)="addTask($event)"></app-task-input>
-  <app-task-list [tasks]="tasks"></app-task-list>
+  <app-task-list [tasks]="tasks" (statusChanged)="onStatusChanged($event)"></app-task-list>
 </main>
 <app-footer></app-footer>

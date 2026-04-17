@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from '../taskCard/taskCard';
 import { TabsComponent } from '../tabs/tabs';
@@ -12,6 +12,8 @@ import { Task } from '../../types';
 })
 export class TaskListComponent {
   @Input() tasks: Task[] = [];
+
+  @Output() statusChanged = new EventEmitter<string>();
 
   filter: 'all' | 'not_done' | 'done' = 'all';
 
@@ -32,6 +34,10 @@ export class TaskListComponent {
 
   setFilter(newFilter: 'all' | 'not_done' | 'done') {
     this.filter = newFilter;
+  }
+
+  onStatusChanged(taskId: string) {
+    this.statusChanged.emit(taskId);
   }
 
   trackByFn(index: number, task: Task) {

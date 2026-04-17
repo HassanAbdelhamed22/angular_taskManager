@@ -7,7 +7,15 @@
     </div>
   </div>
 
+  <div *ngIf="getFilteredTasks().length === 0" class="empty-state">
+    <p *ngIf="filter === 'all'">You have no tasks yet! Go add one!</p>
+
+    <p *ngIf="filter === 'not_done'">Great job! You have no pending tasks left!</p>
+
+    <p *ngIf="filter === 'done'">You haven't completed any tasks yet.</p>
+  </div>
+
   <div *ngFor="let task of getFilteredTasks(); trackBy: trackByFn">
-    <app-task-card [task]="task"></app-task-card>
+    <app-task-card [task]="task" (statusChanged)="onStatusChanged($event)"></app-task-card>
   </div>
 </div>

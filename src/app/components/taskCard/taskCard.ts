@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Task } from '../../types';
 
 @Component({
@@ -8,4 +8,11 @@ import { Task } from '../../types';
 })
 export class TaskCardComponent {
   @Input() task!: Task;
+
+  @Output() statusChanged = new EventEmitter<string>();
+
+  toggleDone() {
+    this.task.isDone = !this.task.isDone;
+    this.statusChanged.emit(this.task.id);
+  }
 }
