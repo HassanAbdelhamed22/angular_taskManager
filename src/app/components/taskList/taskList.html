@@ -2,7 +2,13 @@
   <div class="list-header">
     <h2>Your Tasks</h2>
     <div class="header-actions">
-      <app-tabs [currentFilter]="filter" (filterChange)="setFilter($event)"></app-tabs>
+      <app-tabs
+        [currentFilter]="filter"
+        [allCount]="tasks.length"
+        [notDoneCount]="getNotDoneCount()"
+        [doneCount]="getDoneCount()"
+        (filterChange)="setFilter($event)"
+      ></app-tabs>
       <button class="btn-add" type="button" (click)="openModalFn()">
         <i class="fas fa-plus"></i>
         <span>Add Task</span>

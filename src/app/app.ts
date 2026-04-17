@@ -4,6 +4,7 @@ import { TaskListComponent } from './components/taskList/taskList';
 import { FooterComponent } from './components/footer/footer';
 import { TaskInputComponent } from './components/taskInput/taskInput';
 import { HomeComponent } from './components/home/home';
+import { ConfirmModalComponent } from './components/confirmModal/confirmModal';
 import { Task, Toast } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { Toasts } from './components/toasts/toasts';
@@ -16,13 +17,35 @@ import { Toasts } from './components/toasts/toasts';
     TaskInputComponent,
     TaskListComponent,
     FooterComponent,
+    ConfirmModalComponent,
     Toasts,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
+  private STORAGE_KEY = 'task_manager_tasks';
+
   tasks: Task[] = [];
+
+  constructor() {
+    this.loadTasks();
+  }
+
+  private loadTasks() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) {
+      try {
+        this.tasks = JSON.parse(saved);
+      } catch {
+        this.tasks = [];
+      }
+    }
+  }
+
+  private saveTasks() {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tasks));
+  }
 
   isModalOpen = false;
 
@@ -83,15 +106,35 @@ export class App {
       this.showToast('Task added successfully', 'success');
     }
 
+    this.saveTasks();
     this.isModalOpen = false;
   }
 
+  // Delete confirmation modal
+  isDeleteModalOpen = false;
+  taskToDeleteId = '';
+  taskToDeleteName = '';
+
   deleteTaskFn(taskId: string) {
-    this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    const task = this.tasks.find((t) => t.id === taskId);
+    this.taskToDeleteId = taskId;
+    this.taskToDeleteName = task ? task.title : 'this task';
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete() {
+    this.tasks = this.tasks.filter((t) => t.id !== this.taskToDeleteId);
+    this.saveTasks();
+    this.isDeleteModalOpen = false;
     this.showToast('Task deleted successfully', 'success');
   }
 
+  cancelDelete() {
+    this.isDeleteModalOpen = false;
+  }
+
   onStatusChanged(taskId: string) {
+    this.saveTasks();
     this.showToast('Task status changed successfully', 'success');
   }
 }

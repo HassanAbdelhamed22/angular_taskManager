@@ -23,3 +23,14 @@
 <app-footer></app-footer>
 
 <app-toasts [toasts]="toasts"></app-toasts>
+
+@if (isDeleteModalOpen) {
+  <app-confirm-modal
+    title="Delete Task"
+    [message]="'Are you sure you want to delete this task? This action cannot be undone.'"
+    confirmText="Delete"
+    cancelText="Keep it"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  ></app-confirm-modal>
+}

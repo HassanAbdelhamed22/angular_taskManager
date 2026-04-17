@@ -61,4 +61,12 @@ export class TaskListComponent {
   trackByFn(index: number, task: Task) {
     return task.id;
   }
+
+  getNotDoneCount(): number {
+    return this.tasks.filter((t) => !t.isDone).length;
+  }
+
+  getDoneCount(): number {
+    return this.tasks.filter((t) => t.isDone).length;
+  }
 }
