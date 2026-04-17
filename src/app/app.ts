@@ -4,11 +4,20 @@ import { TaskListComponent } from './components/taskList/taskList';
 import { FooterComponent } from './components/footer/footer';
 import { TaskInputComponent } from './components/taskInput/taskInput';
 import { HomeComponent } from './components/home/home';
-import { Task } from './types';
+import { Task, Toast } from './types';
+import { v4 as uuidv4 } from 'uuid';
+import { Toasts } from './components/toasts/toasts';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, HomeComponent, TaskInputComponent, TaskListComponent, FooterComponent],
+  imports: [
+    HeaderComponent,
+    HomeComponent,
+    TaskInputComponent,
+    TaskListComponent,
+    FooterComponent,
+    Toasts,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -18,6 +27,22 @@ export class App {
   isModalOpen = false;
 
   taskToEdit!: Task;
+
+  toasts: Toast[] = [];
+
+  showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
+    const toast: Toast = {
+      id: uuidv4(),
+      message,
+      type,
+    };
+
+    this.toasts.push(toast);
+
+    setTimeout(() => {
+      this.toasts = this.toasts.filter((t) => t.id !== toast.id);
+    }, 3000);
+  }
 
   openModal() {
     this.taskToEdit = {
@@ -52,8 +77,10 @@ export class App {
 
     if (existingIndex !== -1) {
       this.tasks[existingIndex] = taskToSave;
+      this.showToast('Task updated successfully', 'success');
     } else {
       this.tasks.push(taskToSave);
+      this.showToast('Task added successfully', 'success');
     }
 
     this.isModalOpen = false;
@@ -61,10 +88,10 @@ export class App {
 
   deleteTaskFn(taskId: string) {
     this.tasks = this.tasks.filter((task) => task.id !== taskId);
-    alert(`Task ${taskId} deleted`);
+    this.showToast('Task deleted successfully', 'success');
   }
 
   onStatusChanged(taskId: string) {
-    alert(`Task ${taskId} status changed`);
+    this.showToast('Task status changed successfully', 'success');
   }
 }

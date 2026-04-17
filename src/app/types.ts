@@ -8,3 +8,9 @@ export interface Task {
   tags: string;
   isDone: boolean;
 }
+
+export interface Toast {
+  id: string;
+  message: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+}

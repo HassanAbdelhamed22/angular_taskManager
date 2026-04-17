@@ -3,7 +3,13 @@
   <app-home></app-home>
 
   @if (isModalOpen) {
-    <app-task-input (taskCreated)="addTask($event)" (closeModal)="closeModal()" [taskToEdit]="taskToEdit"> </app-task-input>
+    <app-task-input
+      (taskCreated)="addTask($event)"
+      (closeModal)="closeModal()"
+      [taskToEdit]="taskToEdit"
+      (validationError)="showToast($event, 'error')"
+    >
+    </app-task-input>
   }
 
   <app-task-list
@@ -15,3 +21,5 @@
   ></app-task-list>
 </main>
 <app-footer></app-footer>
+
+<app-toasts [toasts]="toasts"></app-toasts>

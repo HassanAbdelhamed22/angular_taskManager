@@ -10,11 +10,19 @@
       <span class="badge category">{{ task.category }}</span>
       <span class="due-date"><i class="fas fa-calendar"></i> {{ task.dueDate }}</span>
     </div>
+
+    <div class="tags-container">
+      @for (tag of getTags(); track tag) {
+        <span class="badge tag"><i class="fas fa-hashtag"></i> {{ tag }}</span>
+      }
+    </div>
   </div>
   <div class="icons">
     <button class="btn-delete" title="Delete task" (click)="deleteTaskFn()">
       <i class="fas fa-trash"></i>
     </button>
-    <button class="btn-edit" title="Edit task" (click)="editTaskFn()"><i class="fas fa-edit"></i></button>
+    <button class="btn-edit" title="Edit task" (click)="editTaskFn()">
+      <i class="fas fa-edit"></i>
+    </button>
   </div>
 </div>

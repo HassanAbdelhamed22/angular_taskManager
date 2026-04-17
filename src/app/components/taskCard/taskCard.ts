@@ -27,4 +27,8 @@ export class TaskCardComponent {
   editTaskFn() {
     this.editTask.emit(this.task.id);
   }
+
+  getTags() {
+    return this.task.tags.split(',').map((tag) => tag.trim());
+  }
 }

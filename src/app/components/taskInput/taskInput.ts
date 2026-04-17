@@ -16,6 +16,8 @@ export class TaskInputComponent {
 
   @Input() taskToEdit!: Task;
 
+  @Output() validationError = new EventEmitter<string>();
+
   title = '';
   description = '';
   priority = 'Medium';
@@ -30,6 +32,11 @@ export class TaskInputComponent {
   }
 
   addTask() {
+    if (this.taskToEdit.title === '' || this.taskToEdit.title.trim() === '') {
+      this.validationError.emit('Title is required');
+      return;
+    }
+
     if (this.taskToEdit.id === '') {
       this.taskToEdit.id = uuidv4();
     }
