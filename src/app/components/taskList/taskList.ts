@@ -15,6 +15,8 @@ export class TaskListComponent {
 
   @Output() statusChanged = new EventEmitter<string>();
 
+  @Output() openModal = new EventEmitter<void>();
+
   filter: 'all' | 'not_done' | 'done' = 'all';
 
   getFilteredTasks() {
@@ -38,6 +40,10 @@ export class TaskListComponent {
 
   onStatusChanged(taskId: string) {
     this.statusChanged.emit(taskId);
+  }
+
+  openModalFn() {
+    this.openModal.emit();
   }
 
   trackByFn(index: number, task: Task) {

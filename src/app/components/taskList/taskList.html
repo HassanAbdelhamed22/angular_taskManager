@@ -3,7 +3,7 @@
     <h2>Your Tasks</h2>
     <div class="header-actions">
       <app-tabs [currentFilter]="filter" (filterChange)="setFilter($event)"></app-tabs>
-      <button class="btn-add" type="button"><i class="fas fa-plus"></i> Add Task</button>
+      <button class="btn-add" type="button" (click)="openModalFn()"><i class="fas fa-plus"></i> Add Task</button>
     </div>
   </div>
 

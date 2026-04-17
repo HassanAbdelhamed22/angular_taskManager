@@ -1,7 +1,15 @@
 <app-header></app-header>
 <main>
   <app-home></app-home>
-  <app-task-input (taskCreated)="addTask($event)"></app-task-input>
-  <app-task-list [tasks]="tasks" (statusChanged)="onStatusChanged($event)"></app-task-list>
+
+  @if (isModalOpen) {
+    <app-task-input (taskCreated)="addTask($event)" (closeModal)="closeModal()"> </app-task-input>
+  }
+
+  <app-task-list
+    [tasks]="tasks"
+    (statusChanged)="onStatusChanged($event)"
+    (openModal)="openModal()"
+  ></app-task-list>
 </main>
 <app-footer></app-footer>

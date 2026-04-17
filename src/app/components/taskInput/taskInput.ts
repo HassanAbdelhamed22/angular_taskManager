@@ -12,6 +12,8 @@ import { Task } from '../../types';
 export class TaskInputComponent {
   @Output() taskCreated = new EventEmitter<Task>();
 
+  @Output() closeModal = new EventEmitter<void>();
+
   title = '';
   description = '';
   priority = 'Medium';
@@ -20,6 +22,10 @@ export class TaskInputComponent {
   tags = '';
 
   tasks: Task[] = [];
+
+  closeModalFn() {
+    this.closeModal.emit();
+  }
 
   addTask() {
     const newTask: Task = {
@@ -36,6 +42,8 @@ export class TaskInputComponent {
     this.taskCreated.emit(newTask);
 
     this.resetForm();
+
+    this.closeModalFn();
   }
 
   resetForm() {

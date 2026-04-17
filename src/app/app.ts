@@ -15,6 +15,16 @@ import { Task } from './types';
 export class App {
   tasks: Task[] = [];
 
+  isModalOpen = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
   addTask(task: Task) {
     this.tasks.push(task);
   }
