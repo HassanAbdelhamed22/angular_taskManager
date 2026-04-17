@@ -17,6 +17,10 @@ export class TaskListComponent {
 
   @Output() openModal = new EventEmitter<void>();
 
+  @Output() deleteTask = new EventEmitter<string>();
+
+  @Output() editTask = new EventEmitter<string>();
+
   filter: 'all' | 'not_done' | 'done' = 'all';
 
   getFilteredTasks() {
@@ -44,6 +48,14 @@ export class TaskListComponent {
 
   openModalFn() {
     this.openModal.emit();
+  }
+
+  deleteTaskFn(taskId: string) {
+    this.deleteTask.emit(taskId);
+  }
+
+  editTaskFn(taskId: string) {
+    this.editTask.emit(taskId);
   }
 
   trackByFn(index: number, task: Task) {

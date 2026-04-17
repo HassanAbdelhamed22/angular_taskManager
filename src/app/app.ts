@@ -17,16 +17,51 @@ export class App {
 
   isModalOpen = false;
 
+  taskToEdit!: Task;
+
   openModal() {
+    this.taskToEdit = {
+      id: '',
+      title: '',
+      description: '',
+      priority: 'Low',
+      dueDate: '',
+      category: 'Personal',
+      tags: '',
+      isDone: false,
+    };
+
     this.isModalOpen = true;
+  }
+
+  openEditModal(taskId: string) {
+    const task = this.tasks.find((task) => task.id === taskId);
+
+    if (task) {
+      this.taskToEdit = { ...task };
+      this.isModalOpen = true;
+    }
   }
 
   closeModal() {
     this.isModalOpen = false;
   }
 
-  addTask(task: Task) {
-    this.tasks.push(task);
+  addTask(taskToSave: Task) {
+    const existingIndex = this.tasks.findIndex((t) => t.id === taskToSave.id);
+
+    if (existingIndex !== -1) {
+      this.tasks[existingIndex] = taskToSave;
+    } else {
+      this.tasks.push(taskToSave);
+    }
+
+    this.isModalOpen = false;
+  }
+
+  deleteTaskFn(taskId: string) {
+    this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    alert(`Task ${taskId} deleted`);
   }
 
   onStatusChanged(taskId: string) {

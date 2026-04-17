@@ -3,13 +3,15 @@
   <app-home></app-home>
 
   @if (isModalOpen) {
-    <app-task-input (taskCreated)="addTask($event)" (closeModal)="closeModal()"> </app-task-input>
+    <app-task-input (taskCreated)="addTask($event)" (closeModal)="closeModal()" [taskToEdit]="taskToEdit"> </app-task-input>
   }
 
   <app-task-list
     [tasks]="tasks"
     (statusChanged)="onStatusChanged($event)"
     (openModal)="openModal()"
+    (deleteTask)="deleteTaskFn($event)"
+    (editTask)="openEditModal($event)"
   ></app-task-list>
 </main>
 <app-footer></app-footer>

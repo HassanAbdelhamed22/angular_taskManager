@@ -84,8 +84,14 @@
   color: #999;
 }
 
+.icons {
+  display: flex;
+  gap: 6px;
+}
+
 /* delete button */
-.btn-delete {
+.btn-delete,
+.btn-edit {
   background: none;
   border: none;
   font-size: 1rem;
@@ -93,11 +99,18 @@
   cursor: pointer;
   padding: 4px 6px;
   border-radius: 4px;
-  transition: color 0.2s, background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
   line-height: 1;
 }
 
 .btn-delete:hover {
   color: #ef4444;
   background-color: #fef2f2;
+}
+
+.btn-edit:hover {
+  color: #3b82f6;
+  background-color: #f0f9ff;
 }

@@ -11,5 +11,10 @@
       <span class="due-date"><i class="fas fa-calendar"></i> {{ task.dueDate }}</span>
     </div>
   </div>
-  <button class="btn-delete" title="Delete task"><i class="fas fa-trash"></i></button>
+  <div class="icons">
+    <button class="btn-delete" title="Delete task" (click)="deleteTaskFn()">
+      <i class="fas fa-trash"></i>
+    </button>
+    <button class="btn-edit" title="Edit task" (click)="editTaskFn()"><i class="fas fa-edit"></i></button>
+  </div>
 </div>

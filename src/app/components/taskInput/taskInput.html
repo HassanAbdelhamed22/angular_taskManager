@@ -1,13 +1,18 @@
 <div class="modal-overlay" (click)="closeModalFn()">
   <div class="task-input" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Add a New Task</h2>
+      <h2>{{ taskToEdit.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
       <button class="btn-close" (click)="closeModalFn()"><i class="fas fa-times"></i></button>
     </div>
 
     <div class="form-group">
       <label for="task-title">Title</label>
-      <input id="task-title" type="text" placeholder="What needs to be done?" [(ngModel)]="title" />
+      <input
+        id="task-title"
+        type="text"
+        placeholder="What needs to be done?"
+        [(ngModel)]="taskToEdit.title"
+      />
     </div>
 
     <div class="form-group">
@@ -16,14 +21,14 @@
         id="task-desc"
         placeholder="Add some details..."
         rows="3"
-        [(ngModel)]="description"
+        [(ngModel)]="taskToEdit.description"
       ></textarea>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="task-priority">Priority</label>
-        <select id="task-priority" [(ngModel)]="priority">
+        <select id="task-priority" [(ngModel)]="taskToEdit.priority">
           <option>Low</option>
           <option selected>Medium</option>
           <option>High</option>
@@ -32,17 +37,12 @@
 
       <div class="form-group">
         <label for="task-date">Due Date</label>
-        <input
-          id="task-date"
-          type="date"
-          [value]="dueDate"
-          (input)="dueDate = $event.target.value"
-        />
+        <input id="task-date" type="date" [(ngModel)]="taskToEdit.dueDate" />
       </div>
 
       <div class="form-group">
         <label for="task-category">Category</label>
-        <select id="task-category" [(ngModel)]="category">
+        <select id="task-category" [(ngModel)]="taskToEdit.category">
           <option>Work</option>
           <option>Personal</option>
           <option>Study</option>
@@ -56,12 +56,13 @@
         id="task-tags"
         type="text"
         placeholder="e.g. angular, homework, urgent"
-        [(ngModel)]="tags"
+        [(ngModel)]="taskToEdit.tags"
       />
     </div>
 
     <button class="btn-add" type="button" (click)="addTask()">
-      <i class="fas fa-plus"></i> Add Task
+      <i [class]="'fas ' + (taskToEdit.id === '' ? 'fa-plus' : 'fa-edit')"></i>
+      {{ taskToEdit.id === '' ? 'Add Task' : 'Edit Task' }}
     </button>
   </div>
 </div>

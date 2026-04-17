@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../../types';
@@ -14,6 +14,8 @@ export class TaskInputComponent {
 
   @Output() closeModal = new EventEmitter<void>();
 
+  @Input() taskToEdit!: Task;
+
   title = '';
   description = '';
   priority = 'Medium';
@@ -28,30 +30,29 @@ export class TaskInputComponent {
   }
 
   addTask() {
-    const newTask: Task = {
-      id: uuidv4(),
+    if (this.taskToEdit.id === '') {
+      this.taskToEdit.id = uuidv4();
+    }
+
+    this.taskCreated.emit(this.taskToEdit);
+
+    this.closeModalFn();
+  }
+
+  editTask() {
+    const updatedTask: Task = {
+      id: this.taskToEdit!.id,
       title: this.title,
       description: this.description,
       priority: this.priority,
       dueDate: this.dueDate,
       category: this.category,
       tags: this.tags,
-      isDone: false,
+      isDone: this.taskToEdit!.isDone,
     };
 
-    this.taskCreated.emit(newTask);
-
-    this.resetForm();
+    this.taskCreated.emit(updatedTask);
 
     this.closeModalFn();
-  }
-
-  resetForm() {
-    this.title = '';
-    this.description = '';
-    this.priority = 'Medium';
-    this.dueDate = '';
-    this.category = 'Personal';
-    this.tags = '';
   }
 }
