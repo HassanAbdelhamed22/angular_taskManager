@@ -1,16 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  priority: string;
-  dueDate: string;
-  category: string;
-  tags: string;
-}
+import { Task } from '../../types';
 
 @Component({
   selector: 'app-task-input',
@@ -19,38 +10,30 @@ interface Task {
   imports: [FormsModule],
 })
 export class TaskInputComponent {
-  title = '';
-  description = '';
-  priority = 'Medium';
-  dueDate = '';
-  category = 'Personal';
-  tags = '';
+  @Output() taskCreated = new EventEmitter<Task>();
 
-  tasks: Task[] = [];
+  @Output() closeModal = new EventEmitter<void>();
 
-  addTask() {
-    const newTask: Task = {
-      id: uuidv4(),
-      title: this.title,
-      description: this.description,
-      priority: this.priority,
-      dueDate: this.dueDate,
-      category: this.category,
-      tags: this.tags,
-    };
+  @Input() taskFormData!: Task;
 
-    this.tasks.push(newTask);
-    console.log(this.tasks);
+  @Output() validationError = new EventEmitter<string>();
 
-    this.resetForm();
+  closeModalFn() {
+    this.closeModal.emit();
   }
 
-  resetForm() {
-    this.title = '';
-    this.description = '';
-    this.priority = 'Medium';
-    this.dueDate = '';
-    this.category = 'Personal';
-    this.tags = '';
+  addTask() {
+    if (this.taskFormData.title === '' || this.taskFormData.title.trim() === '') {
+      this.validationError.emit('Title is required');
+      return;
+    }
+
+    if (this.taskFormData.id === '') {
+      this.taskFormData.id = uuidv4();
+    }
+
+    this.taskCreated.emit(this.taskFormData);
+
+    this.closeModalFn();
   }
 }

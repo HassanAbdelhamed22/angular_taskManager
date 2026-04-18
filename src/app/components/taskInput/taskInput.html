@@ -1,62 +1,68 @@
-<div class="task-input">
-  <h2>Add a New Task</h2>
-
-  <div class="form-group">
-    <label for="task-title">Title</label>
-    <input
-      id="task-title"
-      type="text"
-      placeholder="What needs to be done?"
-      [(ngModel)]="title"
-    />
-  </div>
-
-  <div class="form-group">
-    <label for="task-desc">Description</label>
-    <textarea
-      id="task-desc"
-      placeholder="Add some details..."
-      rows="3"
-      [(ngModel)]="description"
-    ></textarea>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group">
-      <label for="task-priority">Priority</label>
-      <select id="task-priority" [(ngModel)]="priority">
-        <option>Low</option>
-        <option selected>Medium</option>
-        <option>High</option>
-      </select>
+<div class="modal-overlay" (click)="closeModalFn()">
+  <div class="task-input" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ taskFormData.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
+      <button class="btn-close" (click)="closeModalFn()"><i class="fas fa-times"></i></button>
     </div>
 
     <div class="form-group">
-      <label for="task-date">Due Date</label>
-      <input id="task-date" type="date" [value]="dueDate" (input)="dueDate = $event.target.value" />
+      <label for="task-title">Title</label>
+      <input
+        id="task-title"
+        type="text"
+        placeholder="What needs to be done?"
+        [(ngModel)]="taskFormData.title"
+      />
     </div>
 
     <div class="form-group">
-      <label for="task-category">Category</label>
-      <select id="task-category" [(ngModel)]="category">
-        <option>Work</option>
-        <option>Personal</option>
-        <option>Study</option>
-      </select>
+      <label for="task-desc">Description</label>
+      <textarea
+        id="task-desc"
+        placeholder="Add some details..."
+        rows="3"
+        [(ngModel)]="taskFormData.description"
+      ></textarea>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="task-tags">Tags</label>
-    <input
-      id="task-tags"
-      type="text"
-      placeholder="e.g. angular, homework, urgent"
-      [(ngModel)]="tags"
-    />
-  </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="task-priority">Priority</label>
+        <select id="task-priority" [(ngModel)]="taskFormData.priority">
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
 
-  <button class="btn-add" type="button" (click)="addTask()">
-    <i class="fas fa-plus"></i> Add Task
-  </button>
+      <div class="form-group">
+        <label for="task-date">Due Date</label>
+        <input id="task-date" type="date" [(ngModel)]="taskFormData.dueDate" />
+      </div>
+
+      <div class="form-group">
+        <label for="task-category">Category</label>
+        <select id="task-category" [(ngModel)]="taskFormData.category">
+          <option>Work</option>
+          <option>Personal</option>
+          <option>Study</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="task-tags">Tags</label>
+      <input
+        id="task-tags"
+        type="text"
+        placeholder="e.g. angular, homework, urgent"
+        [(ngModel)]="taskFormData.tags"
+      />
+    </div>
+
+    <button class="btn-add" type="button" (click)="addTask()">
+      <i [class]="'fas ' + (taskFormData.id === '' ? 'fa-plus' : 'fa-edit')"></i>
+      {{ taskFormData.id === '' ? 'Add Task' : 'Edit Task' }}
+    </button>
+  </div>
 </div>

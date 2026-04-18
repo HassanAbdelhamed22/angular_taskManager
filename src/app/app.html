@@ -1,7 +1,36 @@
 <app-header></app-header>
 <main>
   <app-home></app-home>
-  <app-task-input></app-task-input>
-  <app-task-list></app-task-list>
+
+  @if (isModalOpen) {
+    <app-task-input
+      (taskCreated)="addTask($event)"
+      (closeModal)="closeModal()"
+      [taskFormData]="taskFormData"
+      (validationError)="showToast($event, 'error')"
+    >
+    </app-task-input>
+  }
+
+  <app-task-list
+    [tasks]="tasks"
+    (statusChanged)="onStatusChanged($event)"
+    (openModal)="openModal()"
+    (deleteTask)="deleteTaskFn($event)"
+    (editTask)="openEditModal($event)"
+  ></app-task-list>
 </main>
 <app-footer></app-footer>
+
+<app-toasts [toasts]="toasts"></app-toasts>
+
+@if (isDeleteModalOpen) {
+  <app-confirm-modal
+    title="Delete Task"
+    [message]="'Are you sure you want to delete this task? This action cannot be undone.'"
+    confirmText="Delete"
+    cancelText="Keep it"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  ></app-confirm-modal>
+}

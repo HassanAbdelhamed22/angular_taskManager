@@ -1,37 +1,84 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(63, 58, 52, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: overlayIn 0.25s ease both;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
 .task-input {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 28px;
-  border: 1px solid #e5e5e5;
-  margin: 0 28px;
+  background-color: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  border: 1px solid #eaeaeb;
+  box-shadow: 0 16px 48px rgba(63, 58, 52, 0.12);
+  margin: 0 20px;
+  max-width: 500px;
+  width: 100%;
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #928b81;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-close:hover {
+  color: #d97070;
+  background-color: rgba(217, 112, 112, 0.08);
 }
 
 .task-input h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1d1d1f;
-  margin-bottom: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3f3a34;
+  margin-bottom: 0px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   flex: 1;
 }
 
 .form-group label {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #888;
-  margin-bottom: 5px;
-  text-transform: capitalize;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  color: #928b81;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-row {
   display: flex;
-  gap: 12px;
+  gap: 14px;
 }
 
 .task-input input[type='text'],
@@ -39,59 +86,81 @@
 .task-input textarea,
 .task-input select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 11px 14px;
+  border: 2px solid #e5e3dd;
+  border-radius: 10px;
   font-size: 0.92rem;
-  font-family: 'Inter', Arial, sans-serif;
-  color: #1d1d1f;
-  background-color: #fafafa;
-  transition: border-color 0.2s;
+  font-family: inherit;
+  color: #3f3a34;
+  background-color: #faf9f5;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
 }
 
 .task-input input:focus,
 .task-input textarea:focus,
 .task-input select:focus {
-  border-color: #3b82f6;
-  background-color: #fff;
+  border-color: #6b8e82;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(107, 142, 130, 0.1);
 }
 
 .task-input textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
 }
 
 .btn-add {
   width: 100%;
-  padding: 12px;
-  background-color: #3b82f6;
-  color: #fff;
+  padding: 13px;
+  background-color: #6b8e82;
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.95rem;
-  font-weight: 600;
-  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
-  margin-top: 6px;
-  transition: background-color 0.2s;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(107, 142, 130, 0.25);
+  transition: background-color 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
 }
 
 .btn-add i {
   margin-right: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .btn-add:hover {
-  background-color: #2563eb;
+  background-color: #5a7d71;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(107, 142, 130, 0.3);
 }
 
 .btn-add:active {
-  background-color: #1d4ed8;
+  background-color: #4b6a5f;
+  transform: translateY(1px);
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @media (max-width: 500px) {
   .form-row {
     flex-direction: column;
+    gap: 0px;
   }
 }
