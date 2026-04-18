@@ -14,7 +14,7 @@ export class TaskInputComponent {
 
   @Output() closeModal = new EventEmitter<void>();
 
-  @Input() taskToEdit!: Task;
+  @Input() taskFormData!: Task;
 
   @Output() validationError = new EventEmitter<string>();
 
@@ -32,30 +32,30 @@ export class TaskInputComponent {
   }
 
   addTask() {
-    if (this.taskToEdit.title === '' || this.taskToEdit.title.trim() === '') {
+    if (this.taskFormData.title === '' || this.taskFormData.title.trim() === '') {
       this.validationError.emit('Title is required');
       return;
     }
 
-    if (this.taskToEdit.id === '') {
-      this.taskToEdit.id = uuidv4();
+    if (this.taskFormData.id === '') {
+      this.taskFormData.id = uuidv4();
     }
 
-    this.taskCreated.emit(this.taskToEdit);
+    this.taskCreated.emit(this.taskFormData);
 
     this.closeModalFn();
   }
 
   editTask() {
     const updatedTask: Task = {
-      id: this.taskToEdit!.id,
+      id: this.taskFormData!.id,
       title: this.title,
       description: this.description,
       priority: this.priority,
       dueDate: this.dueDate,
       category: this.category,
       tags: this.tags,
-      isDone: this.taskToEdit!.isDone,
+      isDone: this.taskFormData!.isDone,
     };
 
     this.taskCreated.emit(updatedTask);

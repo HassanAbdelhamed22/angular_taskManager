@@ -6,7 +6,7 @@
     <app-task-input
       (taskCreated)="addTask($event)"
       (closeModal)="closeModal()"
-      [taskToEdit]="taskToEdit"
+      [taskFormData]="taskFormData"
       (validationError)="showToast($event, 'error')"
     >
     </app-task-input>

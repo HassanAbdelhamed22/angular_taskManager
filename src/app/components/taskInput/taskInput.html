@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="closeModalFn()">
   <div class="task-input" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ taskToEdit.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
+      <h2>{{ taskFormData.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
       <button class="btn-close" (click)="closeModalFn()"><i class="fas fa-times"></i></button>
     </div>
 
@@ -11,7 +11,7 @@
         id="task-title"
         type="text"
         placeholder="What needs to be done?"
-        [(ngModel)]="taskToEdit.title"
+        [(ngModel)]="taskFormData.title"
       />
     </div>
 
@@ -21,14 +21,14 @@
         id="task-desc"
         placeholder="Add some details..."
         rows="3"
-        [(ngModel)]="taskToEdit.description"
+        [(ngModel)]="taskFormData.description"
       ></textarea>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="task-priority">Priority</label>
-        <select id="task-priority" [(ngModel)]="taskToEdit.priority">
+        <select id="task-priority" [(ngModel)]="taskFormData.priority">
           <option>Low</option>
           <option selected>Medium</option>
           <option>High</option>
@@ -37,12 +37,12 @@
 
       <div class="form-group">
         <label for="task-date">Due Date</label>
-        <input id="task-date" type="date" [(ngModel)]="taskToEdit.dueDate" />
+        <input id="task-date" type="date" [(ngModel)]="taskFormData.dueDate" />
       </div>
 
       <div class="form-group">
         <label for="task-category">Category</label>
-        <select id="task-category" [(ngModel)]="taskToEdit.category">
+        <select id="task-category" [(ngModel)]="taskFormData.category">
           <option>Work</option>
           <option>Personal</option>
           <option>Study</option>
@@ -56,13 +56,13 @@
         id="task-tags"
         type="text"
         placeholder="e.g. angular, homework, urgent"
-        [(ngModel)]="taskToEdit.tags"
+        [(ngModel)]="taskFormData.tags"
       />
     </div>
 
     <button class="btn-add" type="button" (click)="addTask()">
-      <i [class]="'fas ' + (taskToEdit.id === '' ? 'fa-plus' : 'fa-edit')"></i>
-      {{ taskToEdit.id === '' ? 'Add Task' : 'Edit Task' }}
+      <i [class]="'fas ' + (taskFormData.id === '' ? 'fa-plus' : 'fa-edit')"></i>
+      {{ taskFormData.id === '' ? 'Add Task' : 'Edit Task' }}
     </button>
   </div>
 </div>

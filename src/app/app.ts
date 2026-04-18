@@ -49,7 +49,7 @@ export class App {
 
   isModalOpen = false;
 
-  taskToEdit!: Task;
+  taskFormData!: Task;
 
   toasts: Toast[] = [];
 
@@ -68,7 +68,7 @@ export class App {
   }
 
   openModal() {
-    this.taskToEdit = {
+    this.taskFormData = {
       id: '',
       title: '',
       description: '',
@@ -86,7 +86,7 @@ export class App {
     const task = this.tasks.find((task) => task.id === taskId);
 
     if (task) {
-      this.taskToEdit = { ...task };
+      this.taskFormData = { ...task };
       this.isModalOpen = true;
     }
   }
