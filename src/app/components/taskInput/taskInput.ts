@@ -18,15 +18,6 @@ export class TaskInputComponent {
 
   @Output() validationError = new EventEmitter<string>();
 
-  title = '';
-  description = '';
-  priority = 'Medium';
-  dueDate = '';
-  category = 'Personal';
-  tags = '';
-
-  tasks: Task[] = [];
-
   closeModalFn() {
     this.closeModal.emit();
   }
@@ -42,23 +33,6 @@ export class TaskInputComponent {
     }
 
     this.taskCreated.emit(this.taskFormData);
-
-    this.closeModalFn();
-  }
-
-  editTask() {
-    const updatedTask: Task = {
-      id: this.taskFormData!.id,
-      title: this.title,
-      description: this.description,
-      priority: this.priority,
-      dueDate: this.dueDate,
-      category: this.category,
-      tags: this.tags,
-      isDone: this.taskFormData!.isDone,
-    };
-
-    this.taskCreated.emit(updatedTask);
 
     this.closeModalFn();
   }
