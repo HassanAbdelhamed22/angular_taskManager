@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../types';
 
@@ -8,7 +8,7 @@ import { Task } from '../../types';
   templateUrl: './taskCard.html',
   styleUrls: ['./taskCard.css'],
 })
-export class TaskCardComponent {
+export class TaskCardComponent implements OnDestroy {
   @Input() task!: Task;
 
   @Output() statusChanged = new EventEmitter<string>();
@@ -17,8 +17,13 @@ export class TaskCardComponent {
 
   @Output() editTask = new EventEmitter<string>();
 
+  @Output() notifyDestroy = new EventEmitter<string>();
+
+  ngOnDestroy() {
+    this.notifyDestroy.emit(`Task "${this.task.title}" deleted`);
+  }
+
   toggleDone() {
-    this.task.isDone = !this.task.isDone;
     this.statusChanged.emit(this.task.id);
   }
 

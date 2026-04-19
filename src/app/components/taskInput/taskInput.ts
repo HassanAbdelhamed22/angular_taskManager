@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../../types';
@@ -9,7 +9,7 @@ import { Task } from '../../types';
   styleUrls: ['./taskInput.css'],
   imports: [FormsModule],
 })
-export class TaskInputComponent {
+export class TaskInputComponent implements OnInit {
   @Output() taskCreated = new EventEmitter<Task>();
 
   @Output() closeModal = new EventEmitter<void>();
@@ -18,21 +18,27 @@ export class TaskInputComponent {
 
   @Output() validationError = new EventEmitter<string>();
 
+  localTaskData!: Task;
+
+  ngOnInit() {
+    this.localTaskData = { ...this.taskFormData };
+  }
+
   closeModalFn() {
     this.closeModal.emit();
   }
 
   addTask() {
-    if (this.taskFormData.title === '' || this.taskFormData.title.trim() === '') {
+    if (this.localTaskData.title === '' || this.localTaskData.title.trim() === '') {
       this.validationError.emit('Title is required');
       return;
     }
 
-    if (this.taskFormData.id === '') {
-      this.taskFormData.id = uuidv4();
+    if (this.localTaskData.id === '') {
+      this.localTaskData.id = uuidv4();
     }
 
-    this.taskCreated.emit(this.taskFormData);
+    this.taskCreated.emit(this.localTaskData);
 
     this.closeModalFn();
   }

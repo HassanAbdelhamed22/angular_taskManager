@@ -13,11 +13,13 @@
   }
 
   <app-task-list
-    [tasks]="tasks"
+    [incomingTask]="incomingTask"
+    [deletedTaskId]="deletedTaskId"
     (statusChanged)="onStatusChanged($event)"
     (openModal)="openModal()"
     (deleteTask)="deleteTaskFn($event)"
     (editTask)="openEditModal($event)"
+    (taskDestroyedAlert)="showToast($event, 'info')"
   ></app-task-list>
 </main>
 <app-footer></app-footer>
