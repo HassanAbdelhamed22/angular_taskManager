@@ -11,7 +11,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "skipTests": true
+          "skipTests": true,
+          "path": "src/app/components"
         }
       },
       "root": "",
