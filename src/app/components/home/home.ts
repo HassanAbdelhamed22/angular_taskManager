@@ -1,10 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { Carousel } from '../carousel/carousel';
+import { Task } from '../../types';
 
 @Component({
   selector: 'app-home',
-  imports: [Carousel],
+  standalone: true,
+  imports: [Carousel, CommonModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+  username: string = '';
+  totalTasks: number = 0;
+  completedTasks: number = 0;
+  pendingTasks: number = 0;
+
+  private STORAGE_KEY = 'task_manager_tasks';
+
+  ngOnInit() {
+    this.username = localStorage.getItem('username') || 'Guest';
+    this.calculateStats();
+  }
+
+  calculateStats() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) {
+      const tasks: Task[] = JSON.parse(saved);
+      this.totalTasks = tasks.length;
+      this.completedTasks = tasks.filter((t) => t.isDone).length;
+      this.pendingTasks = this.totalTasks - this.completedTasks;
+    }
+  }
+
+  getGreeting(): string {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  }
+}

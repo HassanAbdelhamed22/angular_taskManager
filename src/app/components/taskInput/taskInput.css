@@ -9,8 +9,10 @@
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  align-items: flex-start; /* Fix: ensures the top is visible first */
+  padding: 60px 0; /* Fix: provides breathing room at top and bottom */
+  overflow-y: auto; /* Fix: allow scrolling if modal is tall */
+  z-index: 2000; /* Fix: stay above the sticky header */
   animation: overlayIn 0.25s ease both;
 }
 
@@ -45,7 +47,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .btn-close:hover {
@@ -93,7 +97,10 @@
   font-family: inherit;
   color: #3f3a34;
   background-color: #faf9f5;
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
   outline: none;
 }
 
@@ -123,7 +130,10 @@
   cursor: pointer;
   margin-top: 8px;
   box-shadow: 0 2px 8px rgba(107, 142, 130, 0.25);
-  transition: background-color 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.12s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-add i {
@@ -143,8 +153,12 @@
 }
 
 @keyframes overlayIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalIn {

@@ -1,0 +1,106 @@
+<div class="add-task-container">
+  <div class="add-task-card entrance-animation">
+    <div class="add-task-header">
+      <div class="header-content">
+        <a routerLink="/tasks" class="btn-back">
+          <i class="fas fa-arrow-left"></i>
+          <span>Back to Tasks</span>
+        </a>
+        <h1>Create <span class="accent">New Task</span></h1>
+        <p class="subtitle">Organize your day and stay productive.</p>
+      </div>
+      <div class="header-illustration">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+    </div>
+
+    <form class="add-task-form" (ngSubmit)="handleSubmit()">
+      <div class="form-section">
+        <div class="form-group full-width">
+          <label for="title">Task Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="e.g. Design meeting with the team"
+            [(ngModel)]="taskData.title"
+            required
+            #title="ngModel"
+            [class.invalid]="title.touched && title.invalid"
+          />
+          @if (title.touched && title.invalid) {
+            <span class="error">Title is required</span>
+          }
+        </div>
+
+        <div class="form-group full-width">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Add some details about what needs to be done..."
+            rows="4"
+            [(ngModel)]="taskData.description"
+          ></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <div class="select-wrapper">
+              <i class="fas fa-flag"></i>
+              <select id="priority" name="priority" [(ngModel)]="taskData.priority">
+                <option value="Low">Low Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="High">High Priority</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <div class="date-wrapper">
+              <i class="fas fa-calendar-alt"></i>
+              <input type="date" id="dueDate" name="dueDate" [(ngModel)]="taskData.dueDate" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <div class="select-wrapper">
+              <i class="fas fa-folder"></i>
+              <select id="category" name="category" [(ngModel)]="taskData.category">
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Study">Study</option>
+                <option value="Health">Health</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="tags">Tags (comma separated)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-tags"></i>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              placeholder="e.g. important, project, urgent"
+              [(ngModel)]="taskData.tags"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" routerLink="/tasks" class="btn-cancel">Cancel</button>
+        <button type="submit" class="btn-submit" [disabled]="!taskData.title">
+          <i class="fas fa-check"></i>
+          <span>Save Task</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

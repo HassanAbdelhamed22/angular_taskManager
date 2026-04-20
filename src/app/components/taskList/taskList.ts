@@ -3,33 +3,29 @@ import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from '../taskCard/taskCard';
 import { TabsComponent } from '../tabs/tabs';
 import { Task } from '../../types';
+import { TaskInputComponent } from '../taskInput/taskInput';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCardComponent, TabsComponent, CommonModule],
+  imports: [TaskCardComponent, TabsComponent, CommonModule, TaskInputComponent],
   templateUrl: './taskList.html',
   styleUrls: ['./taskList.css'],
 })
 export class TaskListComponent implements OnInit, OnChanges {
   @Input() incomingTask!: Task;
-
   @Input() deletedTaskId: string = '';
 
   @Output() statusChanged = new EventEmitter<string>();
-
-  @Output() openModal = new EventEmitter<void>();
-
-  @Output() deleteTask = new EventEmitter<Task>();
-
-  @Output() editTask = new EventEmitter<Task>();
-
   @Output() taskDestroyedAlert = new EventEmitter<string>();
 
   filter: 'all' | 'not_done' | 'done' = 'all';
-
   private STORAGE_KEY = 'task_manager_tasks';
 
   tasks: Task[] = [];
+
+  // Modal State
+  isModalOpen = false;
+  taskFormData: Task | null = null;
 
   private loadTasks() {
     const saved = localStorage.getItem(this.STORAGE_KEY);
@@ -48,15 +44,9 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   getFilteredTasks() {
     return this.tasks.filter((task) => {
-      if (this.filter === 'all') {
-        return true;
-      }
-      if (this.filter === 'not_done') {
-        return !task.isDone;
-      }
-      if (this.filter === 'done') {
-        return task.isDone;
-      }
+      if (this.filter === 'all') return true;
+      if (this.filter === 'not_done') return !task.isDone;
+      if (this.filter === 'done') return task.isDone;
       return true;
     });
   }
@@ -67,7 +57,6 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   onStatusChanged(taskId: string) {
     const task = this.tasks.find((t) => t.id === taskId);
-
     if (task) {
       task.isDone = !task.isDone;
       this.saveTasks();
@@ -76,15 +65,34 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   openModalFn() {
-    this.openModal.emit();
-  }
-
-  deleteTaskFn(task: Task) {
-    this.deleteTask.emit(task);
+    this.taskFormData = null;
+    this.isModalOpen = true;
   }
 
   editTaskFn(task: Task) {
-    this.editTask.emit(task);
+    this.taskFormData = { ...task };
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.taskFormData = null;
+  }
+
+  onTaskSaved(task: Task) {
+    const existingIndex = this.tasks.findIndex((t) => t.id === task.id);
+    if (existingIndex !== -1) {
+      this.tasks[existingIndex] = task;
+    } else {
+      this.tasks.push(task);
+    }
+    this.saveTasks();
+    this.isModalOpen = false;
+  }
+
+  deleteTaskFn(task: Task) {
+    this.tasks = this.tasks.filter((t) => t.id !== task.id);
+    this.saveTasks();
   }
 
   onTaskDestroyed(message: string) {
@@ -108,22 +116,6 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['incomingTask'] && changes['incomingTask'].currentValue) {
-      const newTask = changes['incomingTask'].currentValue;
-
-      if (newTask.id) {
-        const existingIndex = this.tasks.findIndex((t) => t.id === newTask.id);
-
-        if (existingIndex !== -1) {
-          this.tasks[existingIndex] = newTask;
-        } else {
-          this.tasks.push(newTask);
-        }
-
-        this.saveTasks();
-      }
-    }
-
     if (changes['deletedTaskId'] && changes['deletedTaskId'].currentValue) {
       this.tasks = this.tasks.filter((t) => t.id !== changes['deletedTaskId'].currentValue);
       this.saveTasks();

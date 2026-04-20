@@ -81,7 +81,11 @@
               (click)="togglePasswordVisibility()"
               [title]="isPasswordVisible ? 'Hide password' : 'Show password'"
             >
-              <i class="fas" [class.fa-eye]="!isPasswordVisible" [class.fa-eye-slash]="isPasswordVisible"></i>
+              <i
+                class="fas"
+                [class.fa-eye]="!isPasswordVisible"
+                [class.fa-eye-slash]="isPasswordVisible"
+              ></i>
             </button>
           </div>
           @if (form.get('password')?.touched && form.get('password')?.invalid) {
@@ -107,7 +111,7 @@
               id="confirmPassword"
               formControlName="confirmPassword"
               [class.invalid]="
-                form.get('confirmPassword')?.touched && 
+                form.get('confirmPassword')?.touched &&
                 (form.get('confirmPassword')?.invalid || form.hasError('passwordMismatch'))
               "
             />
@@ -117,7 +121,11 @@
               (click)="toggleConfirmPasswordVisibility()"
               [title]="isConfirmPasswordVisible ? 'Hide password' : 'Show password'"
             >
-              <i class="fas" [class.fa-eye]="!isConfirmPasswordVisible" [class.fa-eye-slash]="isConfirmPasswordVisible"></i>
+              <i
+                class="fas"
+                [class.fa-eye]="!isConfirmPasswordVisible"
+                [class.fa-eye-slash]="isConfirmPasswordVisible"
+              ></i>
             </button>
           </div>
           @if (form.get('confirmPassword')?.touched) {
@@ -136,7 +144,7 @@
 
       <div class="register-footer">
         <span>Already have an account? </span>
-        <a href="#" class="signup-link">Sign In</a>
+        <a routerLink="/login" class="signup-link">Sign In</a>
       </div>
     </div>
   </div>
