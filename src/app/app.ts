@@ -9,6 +9,7 @@ import { Task, Toast } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { Toasts } from './components/toasts/toasts';
 import { LoginComponent } from './components/login/login';
+import { RegisterComponent } from './components/register/register';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import { LoginComponent } from './components/login/login';
     ConfirmModalComponent,
     Toasts,
     LoginComponent,
+    RegisterComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

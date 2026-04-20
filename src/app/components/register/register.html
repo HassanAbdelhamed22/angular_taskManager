@@ -1,1 +1,143 @@
-<p>register works!</p>
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-illustration-section">
+      <div class="illustration-background">
+        <img src="/Sign up.svg" alt="Register Illustration" class="register-img" />
+      </div>
+    </div>
+
+    <div class="register-form-section entrance-animation">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-check-double"></i>
+        </div>
+        <h1>Task <span class="accent">Manager</span></h1>
+      </div>
+
+      <div class="register-header">
+        <h1>Start Your Productivity Journey</h1>
+        <p class="subtitle">Create an account and take control of your tasks.</p>
+      </div>
+
+      <form [formGroup]="form" class="register-form" (submit)="handleSubmit()">
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            placeholder="Choose a username"
+            id="username"
+            formControlName="username"
+            [class.invalid]="form.get('username')?.touched && form.get('username')?.invalid"
+          />
+          @if (form.get('username')?.touched && form.get('username')?.invalid) {
+            <div class="error">
+              @if (form.get('username')?.hasError('required')) {
+                <span>Username is required</span>
+              } @else if (form.get('username')?.hasError('minlength')) {
+                <span>Username must be at least 3 characters</span>
+              } @else if (form.get('username')?.hasError('pattern')) {
+                <span>Use only letters, numbers, and underscores</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            placeholder="name@example.com"
+            id="email"
+            formControlName="email"
+            [class.invalid]="form.get('email')?.touched && form.get('email')?.invalid"
+          />
+          @if (form.get('email')?.touched && form.get('email')?.invalid) {
+            <div class="error">
+              @if (form.get('email')?.hasError('required')) {
+                <span>Email is required</span>
+              } @else if (form.get('email')?.hasError('email')) {
+                <span>Please enter a valid email address</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              [type]="isPasswordVisible ? 'text' : 'password'"
+              placeholder="Create a strong password"
+              id="password"
+              formControlName="password"
+              [class.invalid]="form.get('password')?.touched && form.get('password')?.invalid"
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="togglePasswordVisibility()"
+              [title]="isPasswordVisible ? 'Hide password' : 'Show password'"
+            >
+              <i class="fas" [class.fa-eye]="!isPasswordVisible" [class.fa-eye-slash]="isPasswordVisible"></i>
+            </button>
+          </div>
+          @if (form.get('password')?.touched && form.get('password')?.invalid) {
+            <div class="error">
+              @if (form.get('password')?.hasError('required')) {
+                <span>Password is required</span>
+              } @else if (form.get('password')?.hasError('minlength')) {
+                <span>Password must be at least 6 characters</span>
+              } @else if (form.get('password')?.hasError('pattern')) {
+                <span>Must contain at least one letter and one number</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-wrapper">
+            <input
+              [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+              placeholder="Confirm your password"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              [class.invalid]="
+                form.get('confirmPassword')?.touched && 
+                (form.get('confirmPassword')?.invalid || form.hasError('passwordMismatch'))
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="toggleConfirmPasswordVisibility()"
+              [title]="isConfirmPasswordVisible ? 'Hide password' : 'Show password'"
+            >
+              <i class="fas" [class.fa-eye]="!isConfirmPasswordVisible" [class.fa-eye-slash]="isConfirmPasswordVisible"></i>
+            </button>
+          </div>
+          @if (form.get('confirmPassword')?.touched) {
+            <div class="error">
+              @if (form.get('confirmPassword')?.hasError('required')) {
+                <span>Please confirm your password</span>
+              } @else if (form.hasError('passwordMismatch')) {
+                <span>Passwords do not match</span>
+              }
+            </div>
+          }
+        </div>
+
+        <button type="submit" class="btn-signin" [disabled]="form.invalid">Create Account</button>
+      </form>
+
+      <div class="register-footer">
+        <span>Already have an account? </span>
+        <a href="#" class="signup-link">Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>
