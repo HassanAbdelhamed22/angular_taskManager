@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="closeModalFn()">
   <div class="task-input" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ taskFormData.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
+      <h2>{{ localTaskData.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
       <button class="btn-close" (click)="closeModalFn()"><i class="fas fa-times"></i></button>
     </div>
 
@@ -9,9 +9,10 @@
       <label for="task-title">Title</label>
       <input
         id="task-title"
+        name="title"
         type="text"
         placeholder="What needs to be done?"
-        [(ngModel)]="taskFormData.title"
+        [(ngModel)]="localTaskData.title"
       />
     </div>
 
@@ -19,16 +20,17 @@
       <label for="task-desc">Description</label>
       <textarea
         id="task-desc"
+        name="description"
         placeholder="Add some details..."
         rows="3"
-        [(ngModel)]="taskFormData.description"
+        [(ngModel)]="localTaskData.description"
       ></textarea>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="task-priority">Priority</label>
-        <select id="task-priority" [(ngModel)]="taskFormData.priority">
+        <select id="task-priority" name="priority" [(ngModel)]="localTaskData.priority">
           <option>Low</option>
           <option selected>Medium</option>
           <option>High</option>
@@ -37,12 +39,12 @@
 
       <div class="form-group">
         <label for="task-date">Due Date</label>
-        <input id="task-date" type="date" [(ngModel)]="taskFormData.dueDate" />
+        <input id="task-date" name="dueDate" type="date" [(ngModel)]="localTaskData.dueDate" />
       </div>
 
       <div class="form-group">
         <label for="task-category">Category</label>
-        <select id="task-category" [(ngModel)]="taskFormData.category">
+        <select id="task-category" name="category" [(ngModel)]="localTaskData.category">
           <option>Work</option>
           <option>Personal</option>
           <option>Study</option>
@@ -54,15 +56,16 @@
       <label for="task-tags">Tags</label>
       <input
         id="task-tags"
+        name="tags"
         type="text"
         placeholder="e.g. angular, homework, urgent"
-        [(ngModel)]="taskFormData.tags"
+        [(ngModel)]="localTaskData.tags"
       />
     </div>
 
     <button class="btn-add" type="button" (click)="addTask()">
-      <i [class]="'fas ' + (taskFormData.id === '' ? 'fa-plus' : 'fa-edit')"></i>
-      {{ taskFormData.id === '' ? 'Add Task' : 'Edit Task' }}
+      <i [class]="'fas ' + (localTaskData.id === '' ? 'fa-plus' : 'fa-edit')"></i>
+      {{ localTaskData.id === '' ? 'Add Task' : 'Edit Task' }}
     </button>
   </div>
 </div>

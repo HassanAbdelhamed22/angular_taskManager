@@ -24,34 +24,22 @@ import { Toasts } from './components/toasts/toasts';
   styleUrl: './app.css',
 })
 export class App {
-  private STORAGE_KEY = 'task_manager_tasks';
-
-  tasks: Task[] = [];
-
-  constructor() {
-    this.loadTasks();
-  }
-
-  private loadTasks() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    if (saved) {
-      try {
-        this.tasks = JSON.parse(saved);
-      } catch {
-        this.tasks = [];
-      }
-    }
-  }
-
-  private saveTasks() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tasks));
-  }
+  showHeader = true;
 
   isModalOpen = false;
 
   taskFormData!: Task;
 
   toasts: Toast[] = [];
+
+  deletedTaskId = '';
+
+  incomingTask!: Task;
+
+  // Delete confirmation modal
+  isDeleteModalOpen = false;
+  taskToDeleteId = '';
+  taskToDeleteName = '';
 
   showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
     const toast: Toast = {
@@ -82,11 +70,11 @@ export class App {
     this.isModalOpen = true;
   }
 
-  openEditModal(taskId: string) {
-    const task = this.tasks.find((task) => task.id === taskId);
+  openEditModal(task: Task) {
+    this.incomingTask = task;
 
-    if (task) {
-      this.taskFormData = { ...task };
+    if (this.incomingTask) {
+      this.taskFormData = { ...this.incomingTask };
       this.isModalOpen = true;
     }
   }
@@ -96,37 +84,26 @@ export class App {
   }
 
   addTask(taskToSave: Task) {
-    const existingIndex = this.tasks.findIndex((t) => t.id === taskToSave.id);
-
-    if (existingIndex !== -1) {
-      this.tasks[existingIndex] = taskToSave;
-      this.showToast('Task updated successfully', 'success');
-    } else {
-      this.tasks.push(taskToSave);
+    if (!taskToSave.id) {
+      taskToSave.id = uuidv4();
       this.showToast('Task added successfully', 'success');
+    } else {
+      this.showToast('Task updated successfully', 'success');
     }
 
-    this.saveTasks();
+    this.incomingTask = { ...taskToSave };
     this.isModalOpen = false;
   }
 
-  // Delete confirmation modal
-  isDeleteModalOpen = false;
-  taskToDeleteId = '';
-  taskToDeleteName = '';
-
-  deleteTaskFn(taskId: string) {
-    const task = this.tasks.find((t) => t.id === taskId);
-    this.taskToDeleteId = taskId;
-    this.taskToDeleteName = task ? task.title : 'this task';
+  deleteTaskFn(task: Task) {
+    this.taskToDeleteId = task.id;
+    this.taskToDeleteName = task.title;
     this.isDeleteModalOpen = true;
   }
 
   confirmDelete() {
-    this.tasks = this.tasks.filter((t) => t.id !== this.taskToDeleteId);
-    this.saveTasks();
+    this.deletedTaskId = this.taskToDeleteId;
     this.isDeleteModalOpen = false;
-    this.showToast('Task deleted successfully', 'success');
   }
 
   cancelDelete() {
@@ -134,7 +111,6 @@ export class App {
   }
 
   onStatusChanged(taskId: string) {
-    this.saveTasks();
     this.showToast('Task status changed successfully', 'success');
   }
 }

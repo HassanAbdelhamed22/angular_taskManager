@@ -1,4 +1,10 @@
-<app-header></app-header>
+@if (showHeader) {
+  <app-header></app-header>
+}
+
+<!-- <button (click)="showHeader = !showHeader" style="margin: 20px; padding: 10px">
+  Toggle Header
+</button> -->
 <main>
   <app-home></app-home>
 
@@ -13,11 +19,13 @@
   }
 
   <app-task-list
-    [tasks]="tasks"
+    [incomingTask]="incomingTask"
+    [deletedTaskId]="deletedTaskId"
     (statusChanged)="onStatusChanged($event)"
     (openModal)="openModal()"
     (deleteTask)="deleteTaskFn($event)"
     (editTask)="openEditModal($event)"
+    (taskDestroyedAlert)="showToast($event, 'info')"
   ></app-task-list>
 </main>
 <app-footer></app-footer>
