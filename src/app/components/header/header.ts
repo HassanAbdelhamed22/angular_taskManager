@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +10,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private intervalId: any;
 
   constructor(
-    private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -26,6 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.intervalId = setInterval(() => {
       this.secondsElapsed++;
       console.log('Timer: ' + this.secondsElapsed);
+      this.cdr.detectChanges();
     }, 1000);
   }
 
