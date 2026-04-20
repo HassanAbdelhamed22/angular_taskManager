@@ -1,4 +1,10 @@
-<app-header></app-header>
+@if (showHeader) {
+  <app-header></app-header>
+}
+
+<!-- <button (click)="showHeader = !showHeader" style="margin: 20px; padding: 10px">
+  Toggle Header
+</button> -->
 <main>
   <app-home></app-home>
 

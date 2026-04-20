@@ -24,13 +24,15 @@ import { Toasts } from './components/toasts/toasts';
   styleUrl: './app.css',
 })
 export class App {
+  showHeader = true;
+
   isModalOpen = false;
 
   taskFormData!: Task;
 
   toasts: Toast[] = [];
 
-  deletedTaskId = '';  
+  deletedTaskId = '';
 
   incomingTask!: Task;
 
