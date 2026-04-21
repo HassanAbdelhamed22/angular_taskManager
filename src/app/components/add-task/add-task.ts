@@ -47,4 +47,13 @@ export class AddTaskComponent {
 
     this.router.navigate(['/tasks']);
   }
+
+  getCategoryIcon(category: string): string {
+    switch (category) {
+      case 'Work': return 'fas fa-briefcase';
+      case 'Personal': return 'fas fa-user';
+      case 'Study': return 'fas fa-book';
+      default: return 'fas fa-folder';
+    }
+  }
 }

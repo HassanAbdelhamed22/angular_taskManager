@@ -15,90 +15,135 @@
     </div>
 
     <form class="add-task-form" (ngSubmit)="handleSubmit()">
-      <div class="form-section">
-        <div class="form-group full-width">
+      <!-- Primary Details Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.1s">
+        <div class="section-title">
+          <i class="fas fa-pen-nib"></i>
+          <span>Basic Details</span>
+        </div>
+        <div class="form-group">
           <label for="title">Task Title</label>
           <input
             type="text"
             id="title"
             name="title"
-            placeholder="e.g. Design meeting with the team"
+            placeholder="What needs to be done?"
             [(ngModel)]="taskData.title"
             required
             #title="ngModel"
             [class.invalid]="title.touched && title.invalid"
           />
           @if (title.touched && title.invalid) {
-            <span class="error">Title is required</span>
+            <span class="error-msg">A title is required to create a task</span>
           }
         </div>
 
-        <div class="form-group full-width">
-          <label for="description">Description</label>
+        <div class="form-group">
+          <label for="description">Description (Optional)</label>
           <textarea
             id="description"
             name="description"
-            placeholder="Add some details about what needs to be done..."
-            rows="4"
+            placeholder="Add finer details or sub-tasks..."
+            rows="3"
             [(ngModel)]="taskData.description"
           ></textarea>
         </div>
+      </div>
 
-        <div class="form-grid">
+      <!-- Settings Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.2s">
+        <div class="section-title">
+          <i class="fas fa-sliders-h"></i>
+          <span>Classification</span>
+        </div>
+        
+        <div class="form-grid-compact">
           <div class="form-group">
-            <label for="priority">Priority</label>
-            <div class="select-wrapper">
-              <i class="fas fa-flag"></i>
-              <select id="priority" name="priority" [(ngModel)]="taskData.priority">
-                <option value="Low">Low Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="High">High Priority</option>
-              </select>
+            <label>Priority Level</label>
+            <div class="chip-group">
+              <button 
+                type="button" 
+                class="chip low" 
+                [class.active]="taskData.priority === 'Low'"
+                (click)="taskData.priority = 'Low'"
+              >
+                <i class="fas fa-circle"></i> Low
+              </button>
+              <button 
+                type="button" 
+                class="chip medium" 
+                [class.active]="taskData.priority === 'Medium'"
+                (click)="taskData.priority = 'Medium'"
+              >
+                <i class="fas fa-circle"></i> Medium
+              </button>
+              <button 
+                type="button" 
+                class="chip high" 
+                [class.active]="taskData.priority === 'High'"
+                (click)="taskData.priority = 'High'"
+              >
+                <i class="fas fa-circle"></i> High
+              </button>
             </div>
           </div>
 
           <div class="form-group">
+            <label>Category</label>
+            <div class="chip-group scrollable">
+              @for (cat of ['Work', 'Personal', 'Study']; track cat) {
+                <button 
+                  type="button" 
+                  class="chip category" 
+                  [class.active]="taskData.category === cat"
+                  (click)="taskData.category = cat"
+                >
+                  <i [class]="getCategoryIcon(cat)"></i> {{cat}}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule & Metadata Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.3s">
+        <div class="section-title">
+          <i class="fas fa-calendar-check"></i>
+          <span>Schedule & Tags</span>
+        </div>
+        <div class="form-grid-compact">
+          <div class="form-group">
             <label for="dueDate">Due Date</label>
-            <div class="date-wrapper">
+            <div class="input-with-icon-premium">
               <i class="fas fa-calendar-alt"></i>
               <input type="date" id="dueDate" name="dueDate" [(ngModel)]="taskData.dueDate" />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="category">Category</label>
-            <div class="select-wrapper">
-              <i class="fas fa-folder"></i>
-              <select id="category" name="category" [(ngModel)]="taskData.category">
-                <option value="Work">Work</option>
-                <option value="Personal">Personal</option>
-                <option value="Study">Study</option>
-                <option value="Health">Health</option>
-              </select>
+            <label for="tags">Tags</label>
+            <div class="input-with-icon-premium">
+              <i class="fas fa-tags"></i>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                placeholder="tag1, tag2..."
+                [(ngModel)]="taskData.tags"
+              />
             </div>
-          </div>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="tags">Tags (comma separated)</label>
-          <div class="input-with-icon">
-            <i class="fas fa-tags"></i>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              placeholder="e.g. important, project, urgent"
-              [(ngModel)]="taskData.tags"
-            />
           </div>
         </div>
       </div>
 
-      <div class="form-actions">
-        <button type="button" routerLink="/tasks" class="btn-cancel">Cancel</button>
-        <button type="submit" class="btn-submit" [disabled]="!taskData.title">
-          <i class="fas fa-check"></i>
-          <span>Save Task</span>
+      <div class="form-actions-premium fade-in-up" style="animation-delay: 0.4s">
+        <button type="button" routerLink="/tasks" class="btn-cancel-premium">
+          Discard Changes
+        </button>
+        <button type="submit" class="btn-submit-premium" [disabled]="!taskData.title">
+          <i class="fas fa-paper-plane"></i>
+          <span>Create Task</span>
         </button>
       </div>
     </form>
