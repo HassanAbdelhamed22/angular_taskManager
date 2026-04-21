@@ -1,30 +1,51 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login';
-import { RegisterComponent } from './components/register/register';
-import { HomeComponent } from './components/home/home';
-import { MainLayoutComponent } from './components/layout/main-layout/main-layout';
 import { authGuard } from './guards/auth-guard';
-import { TaskListComponent } from './components/taskList/taskList';
-import { AddTaskComponent } from './components/add-task/add-task';
-import { NotFoundComponent } from './components/not-found/not-found';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./components/login/login').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./components/register/register').then((m) => m.RegisterComponent),
+  },
 
   {
     path: '',
-    component: MainLayoutComponent,
+    loadComponent: () =>
+      import('./components/layout/main-layout/main-layout').then(
+        (m) => m.MainLayoutComponent
+      ),
     canActivate: [authGuard],
     children: [
-      { path: 'home', component: HomeComponent },
-      { path: 'tasks', component: TaskListComponent },
-      { path: 'add-task', component: AddTaskComponent },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./components/home/home').then((m) => m.HomeComponent),
+      },
+      {
+        path: 'tasks',
+        loadComponent: () =>
+          import('./components/taskList/taskList').then((m) => m.TaskListComponent),
+      },
+      {
+        path: 'add-task',
+        loadComponent: () =>
+          import('./components/add-task/add-task').then((m) => m.AddTaskComponent),
+      },
     ],
   },
 
-  { path: '404', component: NotFoundComponent },
+  {
+    path: '404',
+    loadComponent: () =>
+      import('./components/not-found/not-found').then((m) => m.NotFoundComponent),
+  },
   { path: '**', redirectTo: '404' },
 ];
+
