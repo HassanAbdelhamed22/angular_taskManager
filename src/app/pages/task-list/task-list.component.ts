@@ -6,12 +6,15 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  signal,
+  computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TabsComponent } from '../../components/tabs/tabs.component';
 import { Task } from '../../models/task.model';
 import { TaskInputComponent } from '../../components/task-input/task-input.component';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -26,50 +29,60 @@ export class TaskListComponent implements OnInit, OnChanges {
   @Output() statusChanged = new EventEmitter<string>();
   @Output() taskDestroyedAlert = new EventEmitter<string>();
 
-  filter: 'all' | 'not_done' | 'done' = 'all';
-  private STORAGE_KEY = 'task_manager_tasks';
+  // State using Signals
+  tasks = signal<Task[]>([]);
+  filter = signal<'all' | 'not_done' | 'done'>('all');
 
-  tasks: Task[] = [];
+  // Computed Values
+  filteredTasks = computed(() => {
+    const currentTasks = this.tasks();
+    const currentFilter = this.filter();
+    
+    if (currentFilter === 'all') return currentTasks;
+    if (currentFilter === 'not_done') return currentTasks.filter(t => !t.isDone);
+    if (currentFilter === 'done') return currentTasks.filter(t => t.isDone);
+    return currentTasks;
+  });
+
+  notDoneCount = computed(() => this.tasks().filter(t => !t.isDone).length);
+  doneCount = computed(() => this.tasks().filter(t => t.isDone).length);
 
   // Modal State
   isModalOpen = false;
   taskFormData: Task | null = null;
 
+  constructor(private taskService: TaskService) {}
+
   private loadTasks() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    if (saved) {
-      try {
-        this.tasks = JSON.parse(saved);
-      } catch {
-        this.tasks = [];
-      }
-    }
-  }
-
-  private saveTasks() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tasks));
-  }
-
-  getFilteredTasks() {
-    return this.tasks.filter((task) => {
-      if (this.filter === 'all') return true;
-      if (this.filter === 'not_done') return !task.isDone;
-      if (this.filter === 'done') return task.isDone;
-      return true;
+    this.taskService.getTasks().subscribe({
+      next: (fetchedTasks) => {
+        this.tasks.set(fetchedTasks);
+      },
+      error: (err) => console.error('Failed to load tasks', err)
     });
   }
 
   setFilter(newFilter: 'all' | 'not_done' | 'done') {
-    this.filter = newFilter;
+    this.filter.set(newFilter);
   }
 
   onStatusChanged(taskId: string) {
-    const task = this.tasks.find((t) => t.id === taskId);
+    const currentTasks = this.tasks();
+    const task = currentTasks.find((t) => t.id === taskId);
+    
     if (task) {
-      task.isDone = !task.isDone;
-      this.saveTasks();
+      const newStatus = !task.isDone;
+      this.taskService.updateTask(taskId, { isDone: newStatus }).subscribe({
+        next: () => {
+          // Update the signal immutably
+          this.tasks.update(tasks => 
+            tasks.map(t => t.id === taskId ? { ...t, isDone: newStatus } : t)
+          );
+          this.statusChanged.emit(taskId);
+        },
+        error: (err) => console.error('Failed to update task status', err)
+      });
     }
-    this.statusChanged.emit(taskId);
   }
 
   openModalFn() {
@@ -88,19 +101,39 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   onTaskSaved(task: Task) {
-    const existingIndex = this.tasks.findIndex((t) => t.id === task.id);
-    if (existingIndex !== -1) {
-      this.tasks[existingIndex] = task;
+    const currentTasks = this.tasks();
+    const existingTask = currentTasks.find((t) => t.id === task.id);
+    
+    if (existingTask) {
+      this.taskService.updateTask(task.id, task).subscribe({
+        next: () => {
+          this.tasks.update(tasks => 
+            tasks.map(t => t.id === task.id ? task : t)
+          );
+          this.isModalOpen = false;
+        },
+        error: (err) => console.error('Failed to update task', err)
+      });
     } else {
-      this.tasks.push(task);
+      this.taskService.createTask(task).subscribe({
+        next: (createdTask) => {
+          // Add to signal immutably
+          this.tasks.update(tasks => [...tasks, createdTask]);
+          this.isModalOpen = false;
+        },
+        error: (err) => console.error('Failed to create task', err)
+      });
     }
-    this.saveTasks();
-    this.isModalOpen = false;
   }
 
   deleteTaskFn(task: Task) {
-    this.tasks = this.tasks.filter((t) => t.id !== task.id);
-    this.saveTasks();
+    this.taskService.deleteTask(task.id).subscribe({
+      next: () => {
+        this.tasks.update(tasks => tasks.filter(t => t.id !== task.id));
+        this.taskDestroyedAlert.emit(`Task "${task.title}" was deleted.`);
+      },
+      error: (err) => console.error('Failed to delete task', err)
+    });
   }
 
   onTaskDestroyed(message: string) {
@@ -111,22 +144,17 @@ export class TaskListComponent implements OnInit, OnChanges {
     return task.id;
   }
 
-  getNotDoneCount(): number {
-    return this.tasks.filter((t) => !t.isDone).length;
-  }
-
-  getDoneCount(): number {
-    return this.tasks.filter((t) => t.isDone).length;
-  }
-
   ngOnInit(): void {
     this.loadTasks();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['incomingTask'] && changes['incomingTask'].currentValue) {
+      this.loadTasks();
+    }
+    
     if (changes['deletedTaskId'] && changes['deletedTaskId'].currentValue) {
-      this.tasks = this.tasks.filter((t) => t.id !== changes['deletedTaskId'].currentValue);
-      this.saveTasks();
+      this.tasks.update(tasks => tasks.filter(t => t.id !== changes['deletedTaskId'].currentValue));
     }
   }
 }

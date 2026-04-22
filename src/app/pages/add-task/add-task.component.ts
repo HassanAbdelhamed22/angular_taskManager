@@ -3,49 +3,45 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
+import { TaskInputComponent } from '../../components/task-input/task-input.component';
 
 @Component({
   selector: 'app-add-task',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, TaskInputComponent],
   templateUrl: './add-task.component.html',
   styleUrl: './add-task.component.css',
 })
 export class AddTaskComponent {
   taskData: Task = {
     id: '',
+    userId: '',
     title: '',
     description: '',
     priority: 'Medium',
     dueDate: '',
-    category: 'Work',
+    category: 'Personal',
     tags: '',
     isDone: false,
   };
 
-  private STORAGE_KEY = 'task_manager_tasks';
+  constructor(private router: Router, private taskService: TaskService) {}
 
-  constructor(private router: Router) {}
-
-  handleSubmit() {
-    if (!this.taskData.title.trim()) {
+  handleSubmit(newTask: Task) {
+    if (!newTask.title.trim()) {
       alert('Please enter a task title');
       return;
     }
 
-    const newTask: Task = {
-      ...this.taskData,
-      id: uuidv4(),
-    };
-
-    const savedTasks = localStorage.getItem(this.STORAGE_KEY);
-    let tasks: Task[] = [];
-    if (savedTasks) {
-      tasks = JSON.parse(savedTasks);
-    }
-    tasks.push(newTask);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
-
-    this.router.navigate(['/tasks']);
+    this.taskService.createTask(newTask).subscribe({
+      next: () => {
+        this.router.navigate(['/tasks']);
+      },
+      error: (error) => {
+        console.error('Error creating task:', error);
+        alert('Failed to create task');
+      }
+    });
   }
 
   getCategoryIcon(category: string): string {

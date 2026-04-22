@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
 import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -12,26 +14,35 @@ import { Task } from '../../models/task.model';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  username: string = '';
-  totalTasks: number = 0;
-  completedTasks: number = 0;
-  pendingTasks: number = 0;
+  username = signal<string>('Guest');
+  tasks = signal<Task[]>([]);
 
-  private STORAGE_KEY = 'task_manager_tasks';
+  // Computed Stats
+  totalTasks = computed(() => this.tasks().length);
+  completedTasks = computed(() => this.tasks().filter((t) => t.isDone).length);
+  pendingTasks = computed(() => this.totalTasks() - this.completedTasks());
+
+  constructor(
+    private taskService: TaskService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.username = localStorage.getItem('username') || 'Guest';
-    this.calculateStats();
+    const storedName = this.authService.getUserName();
+    if (storedName) {
+      this.username.set(storedName);
+    }
+    
+    this.loadTasks();
   }
 
-  calculateStats() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    if (saved) {
-      const tasks: Task[] = JSON.parse(saved);
-      this.totalTasks = tasks.length;
-      this.completedTasks = tasks.filter((t) => t.isDone).length;
-      this.pendingTasks = this.totalTasks - this.completedTasks;
-    }
+  loadTasks() {
+    this.taskService.getTasks().subscribe({
+      next: (fetchedTasks) => {
+        this.tasks.set(fetchedTasks);
+      },
+      error: (err) => console.error('Failed to load tasks', err)
+    });
   }
 
   getGreeting(): string {

@@ -5,9 +5,9 @@
       <div class="card-glow"></div>
       <div class="welcome-text">
         <span class="greeting-pill">{{ getGreeting() }}</span>
-        <h1>Welcome back, <span class="username">{{ username }}</span></h1>
+        <h1>Welcome back, <span class="username">{{ username() }}</span></h1>
         <p class="hero-subtitle">
-          Ready to conquer your goals? You have <strong>{{ pendingTasks }}</strong> tasks waiting for your attention today.
+          Ready to conquer your goals? You have <strong>{{ pendingTasks() }}</strong> tasks waiting for your attention today.
         </p>
         <div class="hero-actions">
           <button routerLink="/tasks" class="btn-primary">
@@ -20,12 +20,12 @@
       </div>
       <div class="stats-overview">
         <div class="stat-item">
-          <div class="stat-value">{{ totalTasks }}</div>
+          <div class="stat-value">{{ totalTasks() }}</div>
           <div class="stat-label">Total Projects</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <div class="stat-value">{{ completedTasks }}</div>
+          <div class="stat-value">{{ completedTasks() }}</div>
           <div class="stat-label">Completed</div>
         </div>
       </div>

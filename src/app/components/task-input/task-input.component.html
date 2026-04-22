@@ -1,78 +1,165 @@
-<div class="modal-overlay" (click)="closeModalFn()">
-  <div class="task-input" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ localTaskData.id === '' ? 'Add a New Task' : 'Edit Task' }}</h2>
-      <button class="btn-close" (click)="closeModalFn()">
-        <i class="fas fa-times"></i>
-      </button>
+<div [class]="isModal ? 'modal-overlay' : 'add-task-container'" (click)="isModal && closeModalFn()">
+  <div class="add-task-card entrance-animation task-input-modal" (click)="$event.stopPropagation()">
+    
+    <div class="add-task-header">
+      <div class="header-content">
+        @if (!isModal) {
+          <a routerLink="/tasks" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Tasks</span>
+          </a>
+        }
+        <h1>{{ localTaskData.id === '' ? 'Create' : 'Edit' }} <span class="accent">Task</span></h1>
+        <p class="subtitle">Organize your day and stay productive.</p>
+      </div>
+      <div class="header-illustration">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      @if (isModal) {
+        <button type="button" class="btn-close-premium" (click)="closeModalFn()">
+          <i class="fas fa-times"></i>
+        </button>
+      }
     </div>
 
-    <div class="form-group">
-      <label for="task-title">Title</label>
-      <input
-        id="task-title"
-        name="title"
-        type="text"
-        placeholder="What needs to be done?"
-        [(ngModel)]="localTaskData.title"
-      />
-    </div>
+    <form class="add-task-form" (ngSubmit)="addTask()">
+      <!-- Primary Details Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.1s">
+        <div class="section-title">
+          <i class="fas fa-pen-nib"></i>
+          <span>Basic Details</span>
+        </div>
+        <div class="form-group">
+          <label for="title">Task Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="What needs to be done?"
+            [(ngModel)]="localTaskData.title"
+            required
+            #title="ngModel"
+            [class.invalid]="title.touched && title.invalid"
+          />
+          @if (title.touched && title.invalid) {
+            <span class="error-msg">A title is required to create a task</span>
+          }
+        </div>
 
-    <div class="form-group">
-      <label for="task-desc">Description</label>
-      <textarea
-        id="task-desc"
-        name="description"
-        placeholder="Add some details..."
-        rows="3"
-        [(ngModel)]="localTaskData.description"
-      ></textarea>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="task-priority">Priority</label>
-        <select id="task-priority" name="priority" [(ngModel)]="localTaskData.priority">
-          <option>Low</option>
-          <option selected>Medium</option>
-          <option>High</option>
-        </select>
+        <div class="form-group">
+          <label for="description">Description (Optional)</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Add finer details or sub-tasks..."
+            rows="3"
+            [(ngModel)]="localTaskData.description"
+          ></textarea>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="task-date">Due Date</label>
-        <input
-          id="task-date"
-          name="dueDate"
-          type="date"
-          [(ngModel)]="localTaskData.dueDate"
-        />
+      <!-- Settings Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.2s">
+        <div class="section-title">
+          <i class="fas fa-sliders-h"></i>
+          <span>Classification</span>
+        </div>
+        
+        <div class="form-grid-compact">
+          <div class="form-group">
+            <label>Priority Level</label>
+            <div class="chip-group">
+              <button 
+                type="button" 
+                class="chip low" 
+                [class.active]="localTaskData.priority === 'Low'"
+                (click)="localTaskData.priority = 'Low'"
+              >
+                <i class="fas fa-circle"></i> Low
+              </button>
+              <button 
+                type="button" 
+                class="chip medium" 
+                [class.active]="localTaskData.priority === 'Medium'"
+                (click)="localTaskData.priority = 'Medium'"
+              >
+                <i class="fas fa-circle"></i> Medium
+              </button>
+              <button 
+                type="button" 
+                class="chip high" 
+                [class.active]="localTaskData.priority === 'High'"
+                (click)="localTaskData.priority = 'High'"
+              >
+                <i class="fas fa-circle"></i> High
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <div class="chip-group scrollable">
+              @for (cat of ['Work', 'Personal', 'Study']; track cat) {
+                <button 
+                  type="button" 
+                  class="chip category" 
+                  [class.active]="localTaskData.category === cat"
+                  (click)="localTaskData.category = cat"
+                >
+                  {{cat}}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="task-category">Category</label>
-        <select id="task-category" name="category" [(ngModel)]="localTaskData.category">
-          <option>Work</option>
-          <option>Personal</option>
-          <option>Study</option>
-        </select>
+      <!-- Schedule & Metadata Section -->
+      <div class="form-section fade-in-up" style="animation-delay: 0.3s">
+        <div class="section-title">
+          <i class="fas fa-calendar-check"></i>
+          <span>Schedule & Tags</span>
+        </div>
+        <div class="form-grid-compact">
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <div class="input-with-icon-premium">
+              <i class="fas fa-calendar-alt"></i>
+              <input type="date" id="dueDate" name="dueDate" [(ngModel)]="localTaskData.dueDate" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="tags">Tags</label>
+            <div class="input-with-icon-premium">
+              <i class="fas fa-tags"></i>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                placeholder="tag1, tag2..."
+                [(ngModel)]="localTaskData.tags"
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="task-tags">Tags</label>
-      <input
-        id="task-tags"
-        name="tags"
-        type="text"
-        placeholder="e.g. angular, homework, urgent"
-        [(ngModel)]="localTaskData.tags"
-      />
-    </div>
-
-    <button class="btn-add" type="button" (click)="addTask()">
-      <i [class]="'fas ' + (localTaskData.id === '' ? 'fa-plus' : 'fa-edit')"></i>
-      {{ localTaskData.id === '' ? 'Add Task' : 'Edit Task' }}
-    </button>
+      <div class="form-actions-premium fade-in-up" style="animation-delay: 0.4s">
+        @if (isModal) {
+          <button type="button" class="btn-cancel-premium" (click)="closeModalFn()">
+            Cancel
+          </button>
+        } @else {
+          <button type="button" routerLink="/tasks" class="btn-cancel-premium">
+            Discard Changes
+          </button>
+        }
+        <button type="submit" class="btn-submit-premium" [disabled]="!localTaskData.title">
+          <i class="fas fa-paper-plane"></i>
+          <span>{{ localTaskData.id === '' ? 'Create Task' : 'Save Changes' }}</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>

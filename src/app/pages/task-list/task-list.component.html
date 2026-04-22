@@ -3,10 +3,10 @@
     <h2>Your Tasks</h2>
     <div class="header-actions">
       <app-tabs
-        [currentFilter]="filter"
-        [allCount]="tasks.length"
-        [notDoneCount]="getNotDoneCount()"
-        [doneCount]="getDoneCount()"
+        [currentFilter]="filter()"
+        [allCount]="tasks().length"
+        [notDoneCount]="notDoneCount()"
+        [doneCount]="doneCount()"
         (filterChange)="setFilter($event)"
       ></app-tabs>
       <button class="btn-add" type="button" (click)="openModalFn()">
@@ -16,27 +16,27 @@
     </div>
   </div>
 
-  <div *ngIf="getFilteredTasks().length === 0" class="empty-state">
-    <div *ngIf="filter === 'all'" class="empty-content">
+  <div *ngIf="filteredTasks().length === 0" class="empty-state">
+    <div *ngIf="filter() === 'all'" class="empty-content">
       <span class="empty-emoji">📝</span>
       <p class="empty-title">No tasks yet</p>
       <p class="empty-subtitle">Tap "Add Task" to get started!</p>
     </div>
 
-    <div *ngIf="filter === 'not_done'" class="empty-content">
+    <div *ngIf="filter() === 'not_done'" class="empty-content">
       <span class="empty-emoji">🎉</span>
       <p class="empty-title">All caught up!</p>
       <p class="empty-subtitle">You have no pending tasks. Nice work!</p>
     </div>
 
-    <div *ngIf="filter === 'done'" class="empty-content">
+    <div *ngIf="filter() === 'done'" class="empty-content">
       <span class="empty-emoji">🔍</span>
       <p class="empty-title">Nothing completed yet</p>
       <p class="empty-subtitle">Completed tasks will show up here.</p>
     </div>
   </div>
 
-  <div *ngFor="let task of getFilteredTasks(); trackBy: trackByFn">
+  <div *ngFor="let task of filteredTasks(); trackBy: trackByFn">
     <app-task-card
       [task]="task"
       (statusChanged)="onStatusChanged($event)"

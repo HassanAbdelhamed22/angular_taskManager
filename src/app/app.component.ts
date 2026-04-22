@@ -44,6 +44,7 @@ export class AppComponent {
   openModal() {
     this.taskFormData = {
       id: '',
+      userId: '',
       title: '',
       description: '',
       priority: 'Low',

@@ -7,5 +7,17 @@
       "id": 1
     }
   ],
-  "tasks": []
+  "tasks": [
+    {
+      "id": "60d0371b-4233-4612-abfd-baae0f8411e5",
+      "userId": 1,
+      "title": "hassan",
+      "description": "gnsfgn",
+      "priority": "High",
+      "dueDate": "2026-04-23",
+      "category": "Study",
+      "tags": "study, angular",
+      "isDone": true
+    }
+  ]
 }

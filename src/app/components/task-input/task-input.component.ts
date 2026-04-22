@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../../models/task.model';
 
@@ -7,21 +8,23 @@ import { Task } from '../../models/task.model';
   selector: 'app-task-input',
   templateUrl: './task-input.component.html',
   styleUrl: './task-input.component.css',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
 })
 export class TaskInputComponent implements OnInit {
   @Output() taskCreated = new EventEmitter<Task>();
   @Output() closeModal = new EventEmitter<void>();
 
   @Input() taskFormData: Task | null = null;
+  @Input() isModal: boolean = true;
 
   @Output() validationError = new EventEmitter<string>();
 
   localTaskData: Task = {
     id: '',
+    userId: '',
     title: '',
     description: '',
-    priority: 'Low',
+    priority: 'Medium',
     dueDate: '',
     category: 'Personal',
     tags: '',
