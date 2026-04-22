@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "api": "json-server-auth db.json -r routes.json"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
@@ -17,6 +18,9 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "express": "^4.21.2",
+    "json-server": "^0.17.4",
+    "json-server-auth": "^2.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "uuid": "^13.0.0",
