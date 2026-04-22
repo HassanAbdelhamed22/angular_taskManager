@@ -12,7 +12,8 @@ export class TaskService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getTasks() {
-    return this.http.get<Task[]>(`${this.apiUrl}/tasks`);
+    const userId = this.authService.getCurrentUserId();
+    return this.http.get<Task[]>(`${this.apiUrl}/tasks?userId=${userId}`);
   }
 
   createTask(task: Task) {
