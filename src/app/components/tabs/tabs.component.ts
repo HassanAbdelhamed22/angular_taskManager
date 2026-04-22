@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tabs',
-  templateUrl: './tabs.html',
-  styleUrls: ['./tabs.css'],
+  templateUrl: './tabs.component.html',
+  styleUrl: './tabs.component.css',
 })
 export class TabsComponent {
   @Input() currentFilter: 'all' | 'not_done' | 'done' = 'all';

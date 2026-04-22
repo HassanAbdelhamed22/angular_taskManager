@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Carousel } from '../carousel/carousel';
-import { Task } from '../../types';
+import { CarouselComponent } from '../../components/carousel/carousel.component';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [Carousel, CommonModule, RouterLink],
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+  imports: [CarouselComponent, CommonModule, RouterLink],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
   username: string = '';

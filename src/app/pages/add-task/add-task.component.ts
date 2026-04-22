@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
-import { Task } from '../../types';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-add-task',
   imports: [FormsModule, RouterLink],
-  templateUrl: './add-task.html',
-  styleUrl: './add-task.css',
+  templateUrl: './add-task.component.html',
+  styleUrl: './add-task.component.css',
 })
 export class AddTaskComponent {
   taskData: Task = {

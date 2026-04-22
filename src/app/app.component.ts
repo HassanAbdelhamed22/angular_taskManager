@@ -1,24 +1,15 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './components/header/header';
-import { TaskListComponent } from './components/taskList/taskList';
-import { FooterComponent } from './components/footer/footer';
-import { TaskInputComponent } from './components/taskInput/taskInput';
-import { HomeComponent } from './components/home/home';
-import { ConfirmModalComponent } from './components/confirmModal/confirmModal';
-import { Task, Toast } from './types';
-import { v4 as uuidv4 } from 'uuid';
-import { Toasts } from './components/toasts/toasts';
-import { LoginComponent } from './components/login/login';
-import { RegisterComponent } from './components/register/register';
 import { RouterOutlet } from '@angular/router';
+import { Task, Toast } from './models/task.model';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
 })
-export class App {
+export class AppComponent {
   showHeader = true;
 
   isModalOpen = false;

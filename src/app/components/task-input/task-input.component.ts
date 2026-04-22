@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-import { Task } from '../../types';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-input',
-  templateUrl: './taskInput.html',
-  styleUrls: ['./taskInput.css'],
+  templateUrl: './task-input.component.html',
+  styleUrl: './task-input.component.css',
   imports: [FormsModule],
 })
 export class TaskInputComponent implements OnInit {

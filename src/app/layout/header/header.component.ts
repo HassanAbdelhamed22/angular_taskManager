@@ -7,8 +7,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, UpperCasePipe],
-  templateUrl: './header.html',
-  styleUrls: ['./header.css'],
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   username: string | null = '';

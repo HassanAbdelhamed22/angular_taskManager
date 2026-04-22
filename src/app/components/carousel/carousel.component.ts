@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
   selector: 'app-carousel',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './carousel.html',
-  styleUrl: './carousel.css',
+  templateUrl: './carousel.component.html',
+  styleUrl: './carousel.component.css',
 })
-export class Carousel implements OnInit, OnDestroy {
+export class CarouselComponent implements OnInit, OnDestroy {
   slides = [
     {
       image: 'productivity-bg.png',

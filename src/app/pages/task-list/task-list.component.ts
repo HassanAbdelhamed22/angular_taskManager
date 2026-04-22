@@ -1,15 +1,23 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskCardComponent } from '../taskCard/taskCard';
-import { TabsComponent } from '../tabs/tabs';
-import { Task } from '../../types';
-import { TaskInputComponent } from '../taskInput/taskInput';
+import { TaskCardComponent } from '../../components/task-card/task-card.component';
+import { TabsComponent } from '../../components/tabs/tabs.component';
+import { Task } from '../../models/task.model';
+import { TaskInputComponent } from '../../components/task-input/task-input.component';
 
 @Component({
   selector: 'app-task-list',
   imports: [TaskCardComponent, TabsComponent, CommonModule, TaskInputComponent],
-  templateUrl: './taskList.html',
-  styleUrls: ['./taskList.css'],
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.css',
 })
 export class TaskListComponent implements OnInit, OnChanges {
   @Input() incomingTask!: Task;

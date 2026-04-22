@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task } from '../../types';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-card',
   imports: [CommonModule],
-  templateUrl: './taskCard.html',
-  styleUrls: ['./taskCard.css'],
+  templateUrl: './task-card.component.html',
+  styleUrl: './task-card.component.css',
 })
 export class TaskCardComponent implements OnDestroy {
   @Input() task!: Task;
