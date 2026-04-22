@@ -11,17 +11,27 @@ import { Task } from '../../types';
 })
 export class TaskInputComponent implements OnInit {
   @Output() taskCreated = new EventEmitter<Task>();
-
   @Output() closeModal = new EventEmitter<void>();
 
-  @Input() taskFormData!: Task;
+  @Input() taskFormData: Task | null = null;
 
   @Output() validationError = new EventEmitter<string>();
 
-  localTaskData!: Task;
+  localTaskData: Task = {
+    id: '',
+    title: '',
+    description: '',
+    priority: 'Low',
+    dueDate: '',
+    category: 'Personal',
+    tags: '',
+    isDone: false,
+  };
 
   ngOnInit() {
-    this.localTaskData = { ...this.taskFormData };
+    if (this.taskFormData) {
+      this.localTaskData = { ...this.taskFormData };
+    }
   }
 
   closeModalFn() {

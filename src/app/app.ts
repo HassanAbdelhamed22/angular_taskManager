@@ -8,18 +8,13 @@ import { ConfirmModalComponent } from './components/confirmModal/confirmModal';
 import { Task, Toast } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { Toasts } from './components/toasts/toasts';
+import { LoginComponent } from './components/login/login';
+import { RegisterComponent } from './components/register/register';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    HeaderComponent,
-    HomeComponent,
-    TaskInputComponent,
-    TaskListComponent,
-    FooterComponent,
-    ConfirmModalComponent,
-    Toasts,
-  ],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

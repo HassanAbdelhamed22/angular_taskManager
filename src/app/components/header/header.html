@@ -1,17 +1,46 @@
 <header class="header">
-  <div class="logo">
-    <div class="logo-icon">
-      <i class="fas fa-check-double"></i>
+  <div class="header-left">
+    <div class="logo" routerLink="/home">
+      <div class="logo-icon">
+        <i class="fas fa-check-double"></i>
+      </div>
+      <h1>Task <span class="accent">Manager</span></h1>
     </div>
-    <h1>Task <span class="accent">Manager</span></h1>
-  </div>
-  
-  <div class="session-counter" title="Session time">
-    <i class="far fa-clock"></i> <span>{{ formattedTime }}</span>
   </div>
 
-  <nav>
-    <span class="active">Tasks</span>
-    <span>About</span>
+  <nav class="header-center">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a routerLink="/tasks" routerLinkActive="active">
+      <i class="fas fa-tasks"></i>
+      <span>Tasks</span>
+    </a>
+    <a routerLink="/add-task" routerLinkActive="active">
+      <i class="fas fa-plus-circle"></i>
+      <span>Add Task</span>
+    </a>
   </nav>
+
+  <div class="header-right">
+    <div class="session-badge" title="Active Session">
+      <div class="status-indicator"></div>
+      <span>{{ formattedTime }}</span>
+    </div>
+
+    <div class="user-profile">
+      <div class="user-info">
+        <span class="greeting">Hi,</span>
+        <span class="username">{{ username || 'Guest' }}</span>
+      </div>
+      <div class="avatar">
+        {{ (username ? username[0] : 'G') | uppercase }}
+      </div>
+    </div>
+
+    <button class="btn-logout" (click)="logout()" title="Logout">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div>
 </header>

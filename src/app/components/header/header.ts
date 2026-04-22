@@ -1,31 +1,31 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header',
+  imports: [RouterLink, RouterLinkActive, UpperCasePipe],
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  username: string | null = '';
   secondsElapsed = 0;
   private intervalId: any;
 
   constructor(
-    private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ngOnInit() {
-    // this.ngZone.runOutsideAngular(() => {
-    //   this.intervalId = setInterval(() => {
-    //     this.secondsElapsed++;
-    //     console.log('Timer: ' + this.secondsElapsed);
-    //     this.cdr.detectChanges();
-    //   }, 1000);
-    // });
+    this.username = localStorage.getItem('username');
 
     this.intervalId = setInterval(() => {
       this.secondsElapsed++;
-      console.log('Timer: ' + this.secondsElapsed);
+      this.cdr.detectChanges();
     }, 1000);
   }
 
@@ -47,6 +47,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     return `${paddedSeconds}`;
+  }
+
+  logout() {
+    localStorage.removeItem('username');
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy() {

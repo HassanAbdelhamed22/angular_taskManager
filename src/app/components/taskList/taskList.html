@@ -45,4 +45,12 @@
       (notifyDestroy)="onTaskDestroyed($event)"
     ></app-task-card>
   </div>
+
 </div>
+
+<app-task-input
+  *ngIf="isModalOpen"
+  [taskFormData]="taskFormData"
+  (closeModal)="closeModal()"
+  (taskCreated)="onTaskSaved($event)"
+></app-task-input>

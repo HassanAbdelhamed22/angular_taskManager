@@ -1,3 +1,43 @@
 <div class="home-container">
-  <app-carousel></app-carousel>
+  <!-- Hero Section -->
+  <section class="hero-section entrance-animation">
+    <div class="welcome-card">
+      <div class="card-glow"></div>
+      <div class="welcome-text">
+        <span class="greeting-pill">{{ getGreeting() }}</span>
+        <h1>Welcome back, <span class="username">{{ username }}</span></h1>
+        <p class="hero-subtitle">
+          Ready to conquer your goals? You have <strong>{{ pendingTasks }}</strong> tasks waiting for your attention today.
+        </p>
+        <div class="hero-actions">
+          <button routerLink="/tasks" class="btn-primary">
+            <i class="fas fa-th-list"></i> View Tasks
+          </button>
+          <button routerLink="/add-task" class="btn-secondary">
+            <i class="fas fa-plus"></i> Create New Task
+          </button>
+        </div>
+      </div>
+      <div class="stats-overview">
+        <div class="stat-item">
+          <div class="stat-value">{{ totalTasks }}</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-value">{{ completedTasks }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carousel Section -->
+  <section class="carousel-section entrance-fade">
+    <div class="section-header">
+      <h2>Featured <span class="accent">Insights</span></h2>
+      <p>Stay motivated and focused with daily productivity tips.</p>
+    </div>
+    <app-carousel></app-carousel>
+  </section>
 </div>
