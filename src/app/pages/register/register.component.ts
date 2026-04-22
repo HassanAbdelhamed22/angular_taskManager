@@ -10,6 +10,7 @@ import {
 
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private toastService: ToastService
   ) {}
 
   form = new FormGroup(
@@ -72,11 +74,12 @@ export class RegisterComponent {
       this.authService.register(userData).subscribe({
         next: (response) => {
           this.authService.saveAuthData(response);
+          this.toastService.showToast('You registered successfully', 'success');
           this.router.navigate(['/home']);
         },
         error: (error) => {
           console.error('Register error:', error);
-          alert('Email already exists');
+          this.toastService.showToast('Email already exists', 'error');
         },
       });
     } else {

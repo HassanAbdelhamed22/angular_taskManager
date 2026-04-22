@@ -5,6 +5,12 @@
       "password": "$2a$10$jnAeXx/R7OFTxfeo5yKm/uA7WuGCFiJgWf/dApM6vRoPT8fqUsk2W",
       "username": "Hassan",
       "id": 1
+    },
+    {
+      "email": "ali@gmail.com",
+      "password": "$2a$10$6RNPk2hF8DAt1i.5CKKx0e6AQCSgpsjEiujZrI18mIe0AvmWsbzGO",
+      "username": "Ali",
+      "id": 2
     }
   ],
   "tasks": [
@@ -18,6 +24,28 @@
       "category": "Personal",
       "tags": "",
       "isDone": false
+    },
+    {
+      "id": "985a0478-dd06-4562-b21c-32a40bc251f1",
+      "userId": 2,
+      "title": "Ali Task",
+      "description": "",
+      "priority": "Medium",
+      "dueDate": "",
+      "category": "Personal",
+      "tags": "",
+      "isDone": false
+    },
+    {
+      "id": "8a0cf451-aadb-404d-ad1d-8ea63d4bf9bb",
+      "userId": 1,
+      "title": "Hassan New Teast",
+      "description": "",
+      "priority": "High",
+      "dueDate": "2026-04-24",
+      "category": "Work",
+      "tags": "AI, Stydy",
+      "isDone": true
     }
   ]
 }

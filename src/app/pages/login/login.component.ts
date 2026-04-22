@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private toastService: ToastService
   ) {}
 
   handleSubmit(form: NgForm) {
@@ -34,11 +36,12 @@ export class LoginComponent {
     this.authService.login(loginData).subscribe({
       next: (response) => {
         this.authService.saveAuthData(response);
+        this.toastService.showToast('Logged in successfully', 'success');
         this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Login error:', error);
-        alert('Invalid email or password');
+        this.toastService.showToast('Invalid email or password', 'error');
       },
     });
   }
