@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  username!: string;
+  email!: string;
   password!: string;
   isPasswordVisible: boolean = false;
 
@@ -19,14 +20,26 @@ export class LoginComponent {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  constructor(private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   handleSubmit(form: NgForm) {
-    if (form.valid) {
-      localStorage.setItem('username', this.username);
-      console.log('Login successful, username saved:', this.username);
+    const loginData = {
+      email: this.email,
+      password: this.password,
+    };
 
-      this.router.navigate(['/home']);
-    }
+    this.authService.login(loginData).subscribe({
+      next: (response) => {
+        this.authService.saveAuthData(response);
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        alert('Invalid email or password');
+      },
+    });
   }
 }

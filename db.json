@@ -1,4 +1,11 @@
 {
-  "users": [],
+  "users": [
+    {
+      "email": "hassanabdelhamed09@gmail.com",
+      "password": "$2a$10$jnAeXx/R7OFTxfeo5yKm/uA7WuGCFiJgWf/dApM6vRoPT8fqUsk2W",
+      "username": "Hassan",
+      "id": 1
+    }
+  ],
   "tasks": []
 }

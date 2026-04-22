@@ -20,30 +20,25 @@
 
       <div class="login-form">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="email">Email</label>
           <input
-            type="text"
-            placeholder="Username"
-            id="username"
-            name="username"
-            [(ngModel)]="username"
-            #usernameModel="ngModel"
+            type="email"
+            placeholder="Email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            #emailModel="ngModel"
             required
-            minlength="3"
-            pattern="^[a-zA-Z0-9_]+$"
-            [class.invalid]="
-              usernameModel.invalid && (usernameModel.touched || loginForm.submitted)
-            "
+            pattern="^[a-zA-Z0-9._%\+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+            [class.invalid]="emailModel.invalid && (emailModel.touched || loginForm.submitted)"
           />
 
-          @if (usernameModel.invalid && (usernameModel.touched || loginForm.submitted)) {
+          @if (emailModel.invalid && (emailModel.touched || loginForm.submitted)) {
             <div class="error">
-              @if (usernameModel.errors?.['required']) {
-                <span>Username is required</span>
-              } @else if (usernameModel.errors?.['minlength']) {
-                <span>Username must be at least 3 characters</span>
-              } @else if (usernameModel.errors?.['pattern']) {
-                <span>Username must contain only letters, numbers, and underscores</span>
+              @if (emailModel.errors?.['required']) {
+                <span>Email is required</span>
+              } @else if (emailModel.errors?.['pattern']) {
+                <span>Email must be valid</span>
               }
             </div>
           }
@@ -73,7 +68,11 @@
               (click)="togglePasswordVisibility()"
               [title]="isPasswordVisible ? 'Hide password' : 'Show password'"
             >
-              <i class="fas" [class.fa-eye]="!isPasswordVisible" [class.fa-eye-slash]="isPasswordVisible"></i>
+              <i
+                class="fas"
+                [class.fa-eye]="!isPasswordVisible"
+                [class.fa-eye-slash]="isPasswordVisible"
+              ></i>
             </button>
           </div>
 

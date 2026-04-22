@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -18,10 +19,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
-    this.username = localStorage.getItem('username');
+    this.username = this.authService.getUserName();
 
     this.intervalId = setInterval(() => {
       this.secondsElapsed++;
@@ -50,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    localStorage.removeItem('username');
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 

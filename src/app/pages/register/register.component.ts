@@ -8,7 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,11 @@ import { RouterLink } from '@angular/router';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
   form = new FormGroup(
     {
       username: new FormControl('', [
@@ -57,7 +63,22 @@ export class RegisterComponent {
 
   handleSubmit() {
     if (this.form.valid) {
-      console.log('Form Submitted successfully:', this.form.value);
+      const userData = {
+        username: this.form.value.username!,
+        email: this.form.value.email!,
+        password: this.form.value.password!,
+      };
+
+      this.authService.register(userData).subscribe({
+        next: (response) => {
+          this.authService.saveAuthData(response);
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Register error:', error);
+          alert('Email already exists');
+        },
+      });
     } else {
       this.form.markAllAsTouched();
     }
