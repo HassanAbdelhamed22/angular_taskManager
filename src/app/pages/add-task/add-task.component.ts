@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
 import { TaskInputComponent } from '../../components/task-input/task-input.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-add-task',
@@ -25,21 +26,26 @@ export class AddTaskComponent {
     isDone: false,
   };
 
-  constructor(private router: Router, private taskService: TaskService) {}
+  constructor(
+    private router: Router, 
+    private taskService: TaskService,
+    private toastService: ToastService
+  ) {}
 
   handleSubmit(newTask: Task) {
     if (!newTask.title.trim()) {
-      alert('Please enter a task title');
+      this.toastService.showToast('Please enter a task title', 'warning');
       return;
     }
 
     this.taskService.createTask(newTask).subscribe({
       next: () => {
+        this.toastService.showToast('Task created successfully', 'success');
         this.router.navigate(['/tasks']);
       },
       error: (error) => {
         console.error('Error creating task:', error);
-        alert('Failed to create task');
+        this.toastService.showToast('Failed to create task', 'error');
       }
     });
   }

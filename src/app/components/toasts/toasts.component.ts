@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Toast } from '../../models/task.model';
+import { Component, inject } from '@angular/core';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-toasts',
@@ -8,5 +8,5 @@ import { Toast } from '../../models/task.model';
   styleUrl: './toasts.component.css',
 })
 export class ToastsComponent {
-  @Input() toasts: Toast[] = [];
+  toastService = inject(ToastService);
 }

@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -12,29 +12,15 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  username: string | null = '';
-  secondsElapsed = 0;
+  username = signal<string | null>('');
+  secondsElapsed = signal<number>(0);
   private intervalId: any;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-    private authService: AuthService,
-  ) {}
-
-  ngOnInit() {
-    this.username = this.authService.getUserName();
-
-    this.intervalId = setInterval(() => {
-      this.secondsElapsed++;
-      this.cdr.detectChanges();
-    }, 1000);
-  }
-
-  get formattedTime(): string {
-    const hours = Math.floor(this.secondsElapsed / 3600);
-    const minutes = Math.floor((this.secondsElapsed % 3600) / 60);
-    const seconds = this.secondsElapsed % 60;
+  formattedTime = computed(() => {
+    const totalSeconds = this.secondsElapsed();
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
     const paddedMinutes = minutes.toString().padStart(2, '0');
     const paddedSeconds = seconds.toString().padStart(2, '0');
@@ -49,6 +35,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     return `${paddedSeconds}`;
+  });
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
+
+  ngOnInit() {
+    this.username.set(this.authService.getUserName());
+
+    this.intervalId = setInterval(() => {
+      this.secondsElapsed.update(s => s + 1);
+    }, 1000);
   }
 
   logout() {

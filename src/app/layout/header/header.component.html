@@ -26,16 +26,16 @@
   <div class="header-right">
     <div class="session-badge" title="Active Session">
       <div class="status-indicator"></div>
-      <span>{{ formattedTime }}</span>
+      <span>{{ formattedTime() }}</span>
     </div>
 
     <div class="user-profile">
       <div class="user-info">
         <span class="greeting">Hi,</span>
-        <span class="username">{{ username || 'Guest' }}</span>
+        <span class="username">{{ username() || 'Guest' }}</span>
       </div>
       <div class="avatar">
-        {{ (username ? username[0] : 'G') | uppercase }}
+        {{ (username() ? username()![0] : 'G') | uppercase }}
       </div>
     </div>
 

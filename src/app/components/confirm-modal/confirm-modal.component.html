@@ -1,13 +1,15 @@
-<div class="confirm-overlay" (click)="onCancel()">
+@if (dialogService.state().isOpen) {
+<div class="confirm-overlay" (click)="dialogService.onCancel()">
   <div class="confirm-modal" (click)="$event.stopPropagation()">
     <div class="confirm-icon">
       <i class="fas fa-trash-alt"></i>
     </div>
-    <h3>{{ title }}</h3>
-    <p>{{ message }}</p>
+    <h3>{{ dialogService.state().title }}</h3>
+    <p>{{ dialogService.state().message }}</p>
     <div class="confirm-actions">
-      <button class="btn-cancel" (click)="onCancel()">{{ cancelText }}</button>
-      <button class="btn-confirm" (click)="onConfirm()">{{ confirmText }}</button>
+      <button class="btn-cancel" (click)="dialogService.onCancel()">{{ dialogService.state().cancelText }}</button>
+      <button class="btn-confirm" (click)="dialogService.onConfirm()">{{ dialogService.state().confirmText }}</button>
     </div>
   </div>
 </div>
+}

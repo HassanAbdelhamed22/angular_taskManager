@@ -15,6 +15,8 @@ import { TabsComponent } from '../../components/tabs/tabs.component';
 import { Task } from '../../models/task.model';
 import { TaskInputComponent } from '../../components/task-input/task-input.component';
 import { TaskService } from '../../services/task.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-task-list',
@@ -51,14 +53,21 @@ export class TaskListComponent implements OnInit, OnChanges {
   isModalOpen = false;
   taskFormData: Task | null = null;
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private toastService: ToastService,
+    private confirmDialogService: ConfirmDialogService
+  ) {}
 
   private loadTasks() {
     this.taskService.getTasks().subscribe({
       next: (fetchedTasks) => {
         this.tasks.set(fetchedTasks);
       },
-      error: (err) => console.error('Failed to load tasks', err)
+      error: (err) => {
+        console.error('Failed to load tasks', err);
+        this.toastService.showToast('Failed to load tasks', 'error');
+      }
     });
   }
 
@@ -79,8 +88,12 @@ export class TaskListComponent implements OnInit, OnChanges {
             tasks.map(t => t.id === taskId ? { ...t, isDone: newStatus } : t)
           );
           this.statusChanged.emit(taskId);
+          this.toastService.showToast(`Task marked as ${newStatus ? 'completed' : 'pending'}`, 'success');
         },
-        error: (err) => console.error('Failed to update task status', err)
+        error: (err) => {
+          console.error('Failed to update task status', err);
+          this.toastService.showToast('Failed to update task', 'error');
+        }
       });
     }
   }
@@ -111,8 +124,12 @@ export class TaskListComponent implements OnInit, OnChanges {
             tasks.map(t => t.id === task.id ? task : t)
           );
           this.isModalOpen = false;
+          this.toastService.showToast('Task updated successfully', 'success');
         },
-        error: (err) => console.error('Failed to update task', err)
+        error: (err) => {
+          console.error('Failed to update task', err);
+          this.toastService.showToast('Failed to update task', 'error');
+        }
       });
     } else {
       this.taskService.createTask(task).subscribe({
@@ -120,20 +137,37 @@ export class TaskListComponent implements OnInit, OnChanges {
           // Add to signal immutably
           this.tasks.update(tasks => [...tasks, createdTask]);
           this.isModalOpen = false;
+          this.toastService.showToast('Task created successfully', 'success');
         },
-        error: (err) => console.error('Failed to create task', err)
+        error: (err) => {
+          console.error('Failed to create task', err);
+          this.toastService.showToast('Failed to create task', 'error');
+        }
       });
     }
   }
 
-  deleteTaskFn(task: Task) {
-    this.taskService.deleteTask(task.id).subscribe({
-      next: () => {
-        this.tasks.update(tasks => tasks.filter(t => t.id !== task.id));
-        this.taskDestroyedAlert.emit(`Task "${task.title}" was deleted.`);
-      },
-      error: (err) => console.error('Failed to delete task', err)
+  async deleteTaskFn(task: Task) {
+    const confirmed = await this.confirmDialogService.confirm({
+      title: 'Delete Task',
+      message: `Are you sure you want to delete "${task.title}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel'
     });
+
+    if (confirmed) {
+      this.taskService.deleteTask(task.id).subscribe({
+        next: () => {
+          this.tasks.update(tasks => tasks.filter(t => t.id !== task.id));
+          this.taskDestroyedAlert.emit(`Task "${task.title}" was deleted.`);
+          this.toastService.showToast('Task deleted successfully', 'success');
+        },
+        error: (err) => {
+          console.error('Failed to delete task', err);
+          this.toastService.showToast('Failed to delete task', 'error');
+        }
+      });
+    }
   }
 
   onTaskDestroyed(message: string) {

@@ -1,24 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-confirm-modal',
+  imports: [CommonModule],
   templateUrl: './confirm-modal.component.html',
   styleUrl: './confirm-modal.component.css',
 })
 export class ConfirmModalComponent {
-  @Input() title = 'Are you sure?';
-  @Input() message = '';
-  @Input() confirmText = 'Delete';
-  @Input() cancelText = 'Cancel';
-
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
-
-  onConfirm() {
-    this.confirmed.emit();
-  }
-
-  onCancel() {
-    this.cancelled.emit();
-  }
+  dialogService = inject(ConfirmDialogService);
 }

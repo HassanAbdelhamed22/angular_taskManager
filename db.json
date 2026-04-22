@@ -9,15 +9,15 @@
   ],
   "tasks": [
     {
-      "id": "60d0371b-4233-4612-abfd-baae0f8411e5",
+      "id": "393993d9-c66c-43ab-9abd-feedf3333042",
       "userId": 1,
-      "title": "hassan",
-      "description": "gnsfgn",
-      "priority": "High",
-      "dueDate": "2026-04-23",
-      "category": "Study",
-      "tags": "study, angular",
-      "isDone": true
+      "title": "Hassan Task",
+      "description": "",
+      "priority": "Medium",
+      "dueDate": "",
+      "category": "Personal",
+      "tags": "",
+      "isDone": false
     }
   ]
 }
