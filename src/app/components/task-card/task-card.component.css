@@ -1,21 +1,24 @@
 .task-card {
   background-color: #ffffff;
-  border: 1px solid #eaeaeb;
-  border-left: 3.5px solid #e3e0da;
-  border-radius: 14px;
-  padding: 18px 20px;
-  margin-bottom: 12px;
+  border: 1px solid rgba(227, 224, 218, 0.6);
+  border-left: 4px solid #e3e0da;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  box-shadow: 0 1px 4px rgba(63, 58, 52, 0.04);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-  animation: cardIn 0.35s ease both;
+  gap: 16px;
+  box-shadow: 0 4px 15px rgba(63, 58, 52, 0.04);
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+  animation: cardIn 0.4s ease-out both;
 }
 
 .task-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(63, 58, 52, 0.07);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(63, 58, 52, 0.08);
 }
 
 /* Priority left borders */
@@ -57,6 +60,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  margin-top: 2px;
 }
 
 .custom-checkbox input {
@@ -67,14 +71,14 @@
 }
 
 .checkmark {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 2px solid #d0ccc5;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: transparent;
 }
 
@@ -108,10 +112,11 @@
 }
 
 .card-body h3 {
-  font-size: 1.02rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 800;
   color: #3f3a34;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
   transition: color 0.2s ease;
 }
 
@@ -196,9 +201,9 @@
 .icons {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  gap: 8px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
 }
 
 .task-card:hover .icons {
@@ -214,7 +219,9 @@
   cursor: pointer;
   padding: 7px 8px;
   border-radius: 8px;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
   line-height: 1;
 }
 

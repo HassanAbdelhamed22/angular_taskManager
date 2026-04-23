@@ -45,7 +45,7 @@
       "dueDate": "2026-04-24",
       "category": "Work",
       "tags": "AI, Stydy",
-      "isDone": true
+      "isDone": false
     }
   ]
 }

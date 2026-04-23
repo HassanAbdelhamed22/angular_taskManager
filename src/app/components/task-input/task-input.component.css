@@ -18,9 +18,9 @@
 
 .add-task-card.task-input-modal {
   width: 100%;
-  max-width: 800px;
+  max-width: 550px;
   background: #ffffff;
-  border-radius: 40px;
+  border-radius: 24px;
   box-shadow: 0 20px 60px rgba(63, 58, 52, 0.08);
   overflow: hidden;
   border: 1px solid rgba(227, 224, 218, 0.5);
@@ -30,7 +30,7 @@
 
 .add-task-header {
   background: linear-gradient(135deg, #6b8e82, #4b6a5f);
-  padding: 40px 60px;
+  padding: 24px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,11 +57,11 @@
 }
 
 .add-task-header h1 {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 800;
   margin: 0;
-  letter-spacing: -1.5px;
-  line-height: 1.1;
+  letter-spacing: -1px;
+  line-height: 1.2;
 }
 
 .add-task-header .accent {
@@ -70,14 +70,14 @@
 }
 
 .subtitle {
-  margin-top: 10px;
+  margin-top: 6px;
   color: rgba(255, 255, 255, 0.85);
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
 .header-illustration {
-  font-size: 5rem;
+  font-size: 3.5rem;
   opacity: 0.2;
   transform: rotate(15deg);
 }
@@ -124,23 +124,23 @@
 }
 
 .add-task-form {
-  padding: 50px 60px;
+  padding: 24px 32px;
 }
 
 .form-section {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .section-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 0.85rem;
+  gap: 10px;
+  font-size: 0.8rem;
   font-weight: 800;
   color: #928b81;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 24px;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
 }
 
 .section-title i {
@@ -148,24 +148,24 @@
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-weight: 700;
   color: #3f3a34;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 18px 24px;
+  padding: 12px 16px;
   border: 2px solid #f0efeb;
-  border-radius: 18px;
-  font-size: 1.05rem;
+  border-radius: 12px;
+  font-size: 1rem;
   font-family: inherit;
   color: #3f3a34;
   background-color: #faf9f5;
@@ -183,15 +183,15 @@
 
 .form-grid-compact {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 /* Chip Styles */
 .chip-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .chip-group.scrollable {
@@ -201,13 +201,13 @@
 }
 
 .chip {
-  padding: 12px 20px;
-  border-radius: 14px;
+  padding: 8px 16px;
+  border-radius: 10px;
   border: 2px solid #f0efeb;
   background: #faf9f5;
   color: #928b81;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -268,21 +268,21 @@
 
 /* Actions */
 .form-actions-premium {
-  margin-top: 50px;
-  padding-top: 40px;
+  margin-top: 30px;
+  padding-top: 24px;
   border-top: 2px dashed #f0efeb;
   display: flex;
   justify-content: flex-end;
-  gap: 20px;
+  gap: 16px;
 }
 
 .btn-cancel-premium {
-  padding: 18px 32px;
+  padding: 12px 24px;
   background: transparent;
   color: #928b81;
   border: 1px solid #e3e0da;
-  border-radius: 20px;
-  font-size: 1rem;
+  border-radius: 14px;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -295,12 +295,12 @@
 }
 
 .btn-submit-premium {
-  padding: 18px 48px;
+  padding: 12px 32px;
   background: linear-gradient(135deg, #6b8e82, #5a7d71);
   color: #ffffff;
   border: none;
-  border-radius: 20px;
-  font-size: 1.1rem;
+  border-radius: 14px;
+  font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
