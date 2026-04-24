@@ -40,7 +40,7 @@ export class TaskListComponent implements OnInit, OnChanges {
   
   // Pagination & Filters
   currentPage = signal(1);
-  perPage = signal(10);
+  perPage = signal(5);
   totalItems = signal(0);
   totalPages = signal(0);
   searchQuery = signal('');
@@ -186,10 +186,13 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   onTaskSaved(task: Task) {
-    if (task.id) {
+    const isEdit = !!this.taskFormData;
+    
+    if (isEdit) {
       this.taskService.updateTask(task.id, task).subscribe({
         next: () => {
           this.isModalOpen = false;
+          this.taskFormData = null;
           this.toastService.showToast('Task updated successfully', 'success');
           this.loadGlobalCounts();
           this.loadTasks();
