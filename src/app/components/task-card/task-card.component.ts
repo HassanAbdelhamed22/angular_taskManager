@@ -36,6 +36,27 @@ export class TaskCardComponent implements OnDestroy {
   }
 
   getTags() {
-    return this.task.tags.split(',').map((tag) => tag.trim());
+    if (!this.task.tags) return [];
+    return this.task.tags.split(',').map((tag) => tag.trim()).filter(t => t !== '');
+  }
+
+  isOverdue() {
+    if (!this.task.dueDate || this.task.isDone) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = new Date(this.task.dueDate);
+    return dueDate < today;
+  }
+
+  getFormattedDate() {
+    if (!this.task.dueDate) return 'No due date';
+    const date = new Date(this.task.dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (this.isOverdue()) return 'Overdue';
+    
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
   }
 }

@@ -10,7 +10,10 @@ import { AuthService } from './auth.service';
 export class TaskService {
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   getTasks(queryParams?: TaskQueryParams): Observable<PaginatedResponse<Task> | Task[]> {
     const userId = this.authService.getCurrentUserId();
@@ -18,7 +21,11 @@ export class TaskService {
 
     if (queryParams) {
       Object.keys(queryParams).forEach((key) => {
-        if (queryParams[key] !== undefined && queryParams[key] !== null && queryParams[key] !== '') {
+        if (
+          queryParams[key] !== undefined &&
+          queryParams[key] !== null &&
+          queryParams[key] !== ''
+        ) {
           params = params.set(key, queryParams[key]);
         }
       });
@@ -29,7 +36,7 @@ export class TaskService {
         const data = res.body || [];
         const headerCount = res.headers.get('X-Total-Count') || res.headers.get('x-total-count');
         const totalCount = headerCount ? Number(headerCount) : data.length;
-        
+
         if (queryParams?._page && queryParams?._limit) {
           const totalPages = Math.ceil(totalCount / queryParams._limit);
           return {
@@ -39,12 +46,12 @@ export class TaskService {
             first: 1,
             last: totalPages || 1,
             prev: queryParams._page > 1 ? queryParams._page - 1 : null,
-            next: queryParams._page < totalPages ? queryParams._page + 1 : null
+            next: queryParams._page < totalPages ? queryParams._page + 1 : null,
           } as PaginatedResponse<Task>;
         }
-        
+
         return data;
-      })
+      }),
     );
   }
 

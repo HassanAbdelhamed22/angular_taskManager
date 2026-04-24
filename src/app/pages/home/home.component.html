@@ -5,9 +5,12 @@
       <div class="card-glow"></div>
       <div class="welcome-text">
         <span class="greeting-pill">{{ greeting() }}</span>
-        <h1>Welcome back, <span class="username">{{ username() }}</span></h1>
+        <h1>
+          Welcome back, <span class="username">{{ username() }}</span>
+        </h1>
         <p class="hero-subtitle">
-          Ready to conquer your goals? You have <strong>{{ pendingTasks() }}</strong> tasks waiting for your attention today.
+          Ready to conquer your goals? You have <strong>{{ pendingTasks() }}</strong> tasks waiting
+          for your attention today.
         </p>
         <div class="hero-actions">
           <button routerLink="/tasks" class="btn-primary">
@@ -22,9 +25,11 @@
         <div class="progress-ring-container">
           <svg class="progress-ring" viewBox="0 0 100 100">
             <circle class="progress-ring-bg" cx="50" cy="50" r="40"></circle>
-            <circle 
-              class="progress-ring-fill" 
-              cx="50" cy="50" r="40" 
+            <circle
+              class="progress-ring-fill"
+              cx="50"
+              cy="50"
+              r="40"
               [attr.stroke-dasharray]="251.2"
               [attr.stroke-dashoffset]="251.2 - (251.2 * completionPercentage()) / 100"
             ></circle>
@@ -56,7 +61,7 @@
         <h2>Urgent <span class="accent">Tasks</span></h2>
         <p>High priority items needing your attention.</p>
       </div>
-      
+
       <div class="urgent-tasks-list">
         @if (urgentTasks().length === 0) {
           <div class="empty-state-compact">

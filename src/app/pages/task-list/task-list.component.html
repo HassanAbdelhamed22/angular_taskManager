@@ -1,93 +1,117 @@
 <div class="task-list">
-  <div class="list-header">
-    <h2>Your Tasks</h2>
-    <div class="header-actions">
-      <app-tabs
-        [currentFilter]="filterStatus()"
-        [allCount]="allCount()"
-        [notDoneCount]="notDoneCount()"
-        [doneCount]="doneCount()"
-        (filterChange)="setFilter($event)"
-      ></app-tabs>
-      <button class="btn-add" type="button" (click)="openModalFn()">
-        <i class="fas fa-plus"></i>
-        <span>Add Task</span>
-      </button>
+  <div class="page-header">
+    <div class="header-text">
+      <h1>Your Tasks</h1>
+      <p class="current-date">{{ todayDate }}</p>
     </div>
+    <button class="btn-add-main" (click)="openModalFn()">
+      <div class="btn-icon">
+        <i class="fas fa-plus"></i>
+      </div>
+      <span>Add New Task</span>
+    </button>
   </div>
 
-  <div class="controls-bar">
-    <div class="search-box">
+  <!-- Search & Top Actions -->
+  <div class="top-controls">
+    <div class="search-wrapper">
       <i class="fas fa-search"></i>
-      <input 
-        type="text" 
-        placeholder="Search tasks..." 
-        [ngModel]="searchQuery()" 
+      <input
+        type="text"
+        placeholder="Search tasks..."
+        [ngModel]="searchQuery()"
         (ngModelChange)="searchQuery.set($event); onSearchChange()"
       />
     </div>
-    
-    <div class="filters">
-      <div class="filter-group">
-        <i class="fas fa-flag"></i>
-        <select [ngModel]="filterPriority()" (ngModelChange)="filterPriority.set($event); onFilterPriorityChange()">
-          <option value="">All Priorities</option>
-          <option value="High">High Priority</option>
-          <option value="Medium">Medium Priority</option>
-          <option value="Low">Low Priority</option>
-        </select>
+
+    <div class="filter-actions">
+      <app-custom-select
+        [options]="priorityOptions"
+        [selectedValue]="filterPriority()"
+        [icon]="'fas fa-bars-staggered'"
+        (valueChange)="filterPriority.set($event); onFilterPriorityChange()"
+      ></app-custom-select>
+
+      <app-custom-select
+        [options]="sortOptions"
+        [selectedValue]="sortBy()"
+        [icon]="'fas fa-sort-amount-down'"
+        (valueChange)="sortBy.set($event); onSortChange()"
+      ></app-custom-select>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <app-tabs
+    [currentFilter]="filterStatus()"
+    [allCount]="allCount()"
+    [notDoneCount]="notDoneCount()"
+    [doneCount]="doneCount()"
+    (filterChange)="setFilter($event)"
+  ></app-tabs>
+
+  <!-- Progress Summary -->
+  <div class="progress-summary">
+    <div class="divider"></div>
+    <span class="progress-text">{{ doneCount() }} / {{ allCount() }} completed today</span>
+  </div>
+
+  <!-- Empty State -->
+  @if (tasks().length === 0) {
+    <div class="empty-state">
+      <div class="empty-content">
+        @if (filterStatus() === 'all') {
+          <div class="empty-icon-wrapper"><i class="fas fa-clipboard-list"></i></div>
+          <p class="empty-title">No tasks found</p>
+          <p class="empty-subtitle">Ready to start something new? Create your first task!</p>
+        } @else if (filterStatus() === 'not_done') {
+          <div class="empty-icon-wrapper success"><i class="fas fa-check-double"></i></div>
+          <p class="empty-title">All caught up!</p>
+          <p class="empty-subtitle">You have no pending tasks. Enjoy your free time!</p>
+        } @else {
+          <div class="empty-icon-wrapper info"><i class="fas fa-hourglass-start"></i></div>
+          <p class="empty-title">Nothing completed yet</p>
+          <p class="empty-subtitle">Tasks you finish will show up here. Keep going!</p>
+        }
+        <button class="btn-create-first" (click)="openModalFn()">
+          <i class="fas fa-plus"></i> Create Task
+        </button>
       </div>
+    </div>
+  }
 
-      <div class="filter-group">
-        <i class="fas fa-sort"></i>
-        <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event); onSortChange()">
-          <option value="dueDate_asc">Due Date (Soonest first)</option>
-          <option value="dueDate_desc">Due Date (Latest first)</option>
-          <option value="title_asc">Title (A-Z)</option>
-          <option value="title_desc">Title (Z-A)</option>
-        </select>
+  <!-- Cards Grid -->
+  @if (tasks().length > 0) {
+    <div class="cards-grid">
+      @for (task of tasks(); track task.id) {
+        <app-task-card
+          [task]="task"
+          (statusChanged)="onStatusChanged($event)"
+          (deleteTask)="deleteTaskFn(task)"
+          (editTask)="editTaskFn(task)"
+          (notifyDestroy)="onTaskDestroyed($event)"
+        ></app-task-card>
+      }
+
+      <!-- Add Task Placeholder Card -->
+      <div class="add-task-placeholder" (click)="openModalFn()">
+        <div class="placeholder-border"></div>
+        <div class="placeholder-content">
+          <div class="plus-icon"><i class="fas fa-plus"></i></div>
+          <span>Add a task</span>
+        </div>
       </div>
     </div>
-  </div>
+  }
 
-  <div *ngIf="tasks().length === 0" class="empty-state">
-    <div *ngIf="filterStatus() === 'all'" class="empty-content">
-      <span class="empty-emoji">📝</span>
-      <p class="empty-title">No tasks found</p>
-      <p class="empty-subtitle">Try adjusting your search or filters, or add a new task!</p>
-    </div>
-
-    <div *ngIf="filterStatus() === 'not_done'" class="empty-content">
-      <span class="empty-emoji">🎉</span>
-      <p class="empty-title">All caught up!</p>
-      <p class="empty-subtitle">You have no pending tasks. Nice work!</p>
-    </div>
-
-    <div *ngIf="filterStatus() === 'done'" class="empty-content">
-      <span class="empty-emoji">🔍</span>
-      <p class="empty-title">Nothing completed yet</p>
-      <p class="empty-subtitle">Completed tasks will show up here.</p>
-    </div>
-  </div>
-
-  <div class="cards-grid" *ngIf="tasks().length > 0">
-    <div *ngFor="let task of tasks(); trackBy: trackByFn">
-      <app-task-card
-        [task]="task"
-        (statusChanged)="onStatusChanged($event)"
-        (deleteTask)="deleteTaskFn(task)"
-        (editTask)="editTaskFn(task)"
-        (notifyDestroy)="onTaskDestroyed($event)"
-      ></app-task-card>
-    </div>
-  </div>
-
-  <app-pagination
-    [currentPage]="currentPage()"
-    [totalPages]="totalPages()"
-    (pageChange)="goToPage($event)"
-  ></app-pagination>
-
+  <!-- Pagination -->
+  @if (totalItems() > perPage()) {
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      (pageChange)="goToPage($event)"
+    ></app-pagination>
+  }
 </div>
 
 <app-task-input

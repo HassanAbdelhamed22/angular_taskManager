@@ -7,7 +7,7 @@
     [class.active]="currentFilter === 'not_done'"
     (click)="setFilter('not_done')"
   >
-    Not Done <span class="tab-count">{{ notDoneCount }}</span>
+    In progress <span class="tab-count">{{ notDoneCount }}</span>
   </button>
   <button class="tab-btn" [class.active]="currentFilter === 'done'" (click)="setFilter('done')">
     Done <span class="tab-count">{{ doneCount }}</span>

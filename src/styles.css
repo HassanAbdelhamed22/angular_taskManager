@@ -41,3 +41,7 @@ body {
     transform: translateY(0);
   }
 }
+
+.text-danger { color: #d97070; }
+.text-warning { color: #e6a23c; }
+.text-success { color: #6b8e82; }

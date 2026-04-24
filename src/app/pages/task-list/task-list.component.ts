@@ -9,7 +9,6 @@ import {
   signal,
   computed,
   effect,
-  untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +20,7 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
+import { CustomSelectComponent, SelectOption } from '../../components/custom-select/custom-select.component';
 
 @Component({
   selector: 'app-task-list',
@@ -31,6 +31,7 @@ import { ConfirmDialogService } from '../../services/confirm-dialog.service';
     FormsModule,
     TaskInputComponent,
     PaginationComponent,
+    CustomSelectComponent,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
@@ -41,6 +42,13 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   @Output() statusChanged = new EventEmitter<string>();
   @Output() taskDestroyedAlert = new EventEmitter<string>();
+  
+  todayDate: string = new Date().toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 
   // State using Signals
   tasks = signal<Task[]>([]);
@@ -53,10 +61,26 @@ export class TaskListComponent implements OnInit, OnChanges {
   searchQuery = signal('');
   filterPriority = signal('');
   sortBy = signal('dueDate_asc');
+  refreshTrigger = signal(0);
+
+  priorityOptions: SelectOption[] = [
+    { label: 'All Priorities', value: '' },
+    { label: 'High Priority', value: 'High', icon: 'fas fa-circle text-danger' },
+    { label: 'Medium Priority', value: 'Medium', icon: 'fas fa-circle text-warning' },
+    { label: 'Low Priority', value: 'Low', icon: 'fas fa-circle text-success' },
+  ];
+
+  sortOptions: SelectOption[] = [
+    { label: 'Soonest Due', value: 'dueDate_asc' },
+    { label: 'Latest Due', value: 'dueDate_desc' },
+    { label: 'Name (A-Z)', value: 'title_asc' },
+    { label: 'Name (Z-A)', value: 'title_desc' },
+  ];
 
   totalPages = computed(() => Math.ceil(this.totalItems() / this.perPage()));
 
   queryParams = computed(() => {
+    this.refreshTrigger(); // Force re-fetch on trigger change
     const sortVal = this.sortBy().split('_');
 
     const params: TaskQueryParams = {
@@ -170,6 +194,12 @@ export class TaskListComponent implements OnInit, OnChanges {
     const task = this.tasks().find((t) => t.id === taskId);
     if (task) {
       const newStatus = !task.isDone;
+      
+      // Optimistic update: Update local state immediately
+      this.tasks.update(currentTasks => 
+        currentTasks.map(t => t.id === taskId ? { ...t, isDone: newStatus } : t)
+      );
+
       this.taskService.updateTask(taskId, { isDone: newStatus }).subscribe({
         next: () => {
           this.toastService.showToast(
@@ -178,9 +208,17 @@ export class TaskListComponent implements OnInit, OnChanges {
           );
           this.statusChanged.emit(taskId);
           this.loadGlobalCounts();
-          this.currentPage.update((v) => v);
+          
+          // If we are filtering by status, we need to refresh to potentially remove the task from view
+          if (this.filterStatus() !== 'all') {
+            this.currentPage.update((v) => v);
+          }
         },
         error: (err) => {
+          // Revert optimistic update on error
+          this.tasks.update(currentTasks => 
+            currentTasks.map(t => t.id === taskId ? { ...t, isDone: !newStatus } : t)
+          );
           console.error('Failed to update task status', err);
           this.toastService.showToast('Failed to update task', 'error');
         },
@@ -213,7 +251,7 @@ export class TaskListComponent implements OnInit, OnChanges {
           this.taskFormData = null;
           this.toastService.showToast('Task updated successfully', 'success');
           this.loadGlobalCounts();
-          this.currentPage.update((v) => v);
+          this.refreshTrigger.update(n => n + 1);
         },
         error: (err) => {
           console.error('Failed to update task', err);
@@ -226,7 +264,7 @@ export class TaskListComponent implements OnInit, OnChanges {
           this.isModalOpen = false;
           this.toastService.showToast('Task created successfully', 'success');
           this.loadGlobalCounts();
-          this.currentPage.update((v) => v);
+          this.refreshTrigger.update(n => n + 1);
         },
         error: (err) => {
           console.error('Failed to create task', err);
@@ -250,7 +288,7 @@ export class TaskListComponent implements OnInit, OnChanges {
           this.toastService.showToast('Task deleted successfully', 'success');
           this.taskDestroyedAlert.emit(task.id);
           this.loadGlobalCounts();
-          this.currentPage.update((v) => v);
+          this.refreshTrigger.update(n => n + 1);
         },
         error: (err) => {
           console.error('Failed to delete task', err);

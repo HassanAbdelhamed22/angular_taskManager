@@ -1,69 +1,51 @@
 .task-card {
-  background-color: #ffffff;
-  border: 1px solid rgba(227, 224, 218, 0.6);
-  border-left: 4px solid #e3e0da;
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 16px;
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 16px;
-  box-shadow: 0 4px 15px rgba(63, 58, 52, 0.04);
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s ease;
-  animation: cardIn 0.4s ease-out both;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  height: 100%;
 }
 
 .task-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(63, 58, 52, 0.08);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
 }
 
-/* Priority left borders */
-.task-card.priority-border-high {
-  border-left-color: #d97070;
+/* Colored Top Border */
+.card-top-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #e3e0da;
 }
 
-.task-card.priority-border-medium {
-  border-left-color: #d4a36a;
-}
+.priority-high .card-top-border { background: #d97070; }
+.priority-medium .card-top-border { background: #e6a23c; }
+.priority-low .card-top-border { background: #6b8e82; }
 
-.task-card.priority-border-low {
-  border-left-color: #74a376;
-}
-
-/* Done state */
-.task-card.is-done {
-  opacity: 0.65;
-}
-
-.task-card.is-done .card-body h3 {
-  text-decoration: line-through;
-  color: #928b81;
-}
-
-.task-card.is-done .card-body .description {
-  text-decoration: line-through;
-  color: #b5afa6;
-}
-
-/* Custom checkbox */
-.card-left {
-  padding-top: 2px;
-}
-
-.custom-checkbox {
-  position: relative;
+/* Checkbox */
+.card-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-top: 2px;
+  justify-content: flex-start;
 }
 
-.custom-checkbox input {
+.circular-checkbox {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.circular-checkbox input {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -71,177 +53,126 @@
 }
 
 .checkmark {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid #d0ccc5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 28px;
+  width: 28px;
   background-color: transparent;
-}
-
-.checkmark i {
-  font-size: 0.6rem;
-  color: #ffffff;
-  opacity: 0;
-  transform: scale(0.5);
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
   transition: all 0.2s ease;
 }
 
-.custom-checkbox input:checked + .checkmark {
+.circular-checkbox:hover input ~ .checkmark {
+  border-color: #6b8e82;
+}
+
+.circular-checkbox input:checked ~ .checkmark {
   background-color: #6b8e82;
   border-color: #6b8e82;
-  box-shadow: 0 2px 6px rgba(107, 142, 130, 0.35);
 }
 
-.custom-checkbox input:checked + .checkmark i {
-  opacity: 1;
-  transform: scale(1);
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
-.custom-checkbox:hover .checkmark {
-  border-color: #6b8e82;
+.circular-checkbox input:checked ~ .checkmark:after {
+  display: block;
 }
 
-/* Card body */
-.card-body {
+/* Content */
+.card-content {
   flex: 1;
-  min-width: 0;
 }
 
-.card-body h3 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #3f3a34;
-  margin-bottom: 6px;
-  letter-spacing: -0.2px;
-  transition: color 0.2s ease;
-}
-
-.card-body .description {
-  font-size: 0.86rem;
-  color: #7a736a;
-  margin-bottom: 10px;
-  line-height: 1.5;
-  transition: color 0.2s ease;
-}
-
-.card-meta {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.badge {
-  font-size: 0.72rem;
+.task-title {
+  font-size: 1.25rem;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 6px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+  color: #3f3a34;
+  margin-bottom: 12px;
+  transition: color 0.2s ease;
 }
 
-.priority-high {
-  background-color: #fdf2f2;
-  color: #d97070;
-}
-
-.priority-medium {
-  background-color: #fffaf0;
-  color: #d4a36a;
-}
-
-.priority-low {
-  background-color: #f2f9f1;
-  color: #74a376;
-}
-
-.category {
-  background-color: #f5f3fa;
-  color: #8c7aa8;
-}
-
-.due-date {
-  font-size: 0.8rem;
-  font-weight: 600;
+.is-done .task-title {
+  text-decoration: line-through;
   color: #928b81;
 }
 
-.due-date i {
-  margin-right: 3px;
-}
-
-.tags-container {
+.badges-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.badge.tag {
-  background-color: #f4f3ef;
-  color: #7a736a;
-  border: 1px solid #e9e7e1;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 0.72rem;
-  text-transform: none;
-}
-
-.badge.tag i {
-  font-size: 0.55rem;
-  opacity: 0.5;
-}
-
-/* Action buttons */
-.icons {
-  display: flex;
-  flex-direction: column;
   gap: 8px;
-  opacity: 0.3;
-  transition: opacity 0.3s ease;
 }
 
-.task-card:hover .icons {
-  opacity: 1;
-}
-
-.btn-delete,
-.btn-edit {
-  background: none;
-  border: none;
-  font-size: 0.85rem;
-  color: #c9c5be;
-  cursor: pointer;
-  padding: 7px 8px;
+.badge {
+  padding: 4px 12px;
   border-radius: 8px;
-  transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
-  line-height: 1;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-.btn-edit:hover {
-  color: #6b8e82;
-  background-color: rgba(107, 142, 130, 0.08);
+.priority-badge.high { background: #fff1f1; color: #d97070; }
+.priority-badge.medium { background: #fff8eb; color: #e6a23c; }
+.priority-badge.low { background: #f0f4f2; color: #6b8e82; }
+
+.category-badge { background: #f3f0ff; color: #7c4dff; }
+.tag-badge { background: #f0f0f0; color: #666; }
+
+/* Footer */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #f5f5f5;
+  margin-top: auto;
 }
 
-.btn-delete:hover {
+.due-date {
+  font-size: 0.85rem;
+  color: #928b81;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.due-date.overdue {
   color: #d97070;
-  background-color: rgba(217, 112, 112, 0.08);
 }
 
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.footer-actions {
+  display: flex;
+  gap: 4px;
 }
+
+.action-btn {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #c0c0c0;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #f8f8f8;
+}
+
+.action-btn.edit:hover { color: #6b8e82; }
+.action-btn.delete:hover { color: #d97070; }
