@@ -15,10 +15,8 @@ export class ToastService {
       type
     };
 
-    // Add toast to signal array
     this.toasts.update(currentToasts => [...currentToasts, newToast]);
 
-    // Auto remove after 3 seconds
     setTimeout(() => {
       this.removeToast(newToast.id);
     }, 3000);

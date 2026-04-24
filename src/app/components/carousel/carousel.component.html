@@ -3,7 +3,7 @@
     <div
       *ngFor="let slide of slides; let i = index"
       class="carousel-slide"
-      [class.active]="currentIndex === i"
+      [class.active]="currentIndex() === i"
     >
       <div class="image-overlay"></div>
       <img [src]="slide.image" [alt]="slide.title" />
@@ -31,7 +31,7 @@
     <span
       *ngFor="let slide of slides; let i = index"
       class="dot"
-      [class.active]="currentIndex === i"
+      [class.active]="currentIndex() === i"
       (click)="goTo(i)"
     ></span>
   </div>

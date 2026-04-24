@@ -144,7 +144,7 @@
       "dueDate": "",
       "category": "Personal",
       "tags": "",
-      "isDone": false
+      "isDone": true
     }
   ]
 }

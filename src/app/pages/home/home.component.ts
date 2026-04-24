@@ -12,13 +12,20 @@ import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [CarouselComponent, TaskCardComponent, TaskInputComponent, CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  username = signal<string>('Guest');
+  username = computed(() => this.authService.currentUser()?.username || 'Guest');
+  
+  greeting = computed(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  });
+
   totalTasks = signal<number>(0);
   completedTasks = signal<number>(0);
   urgentTasks = signal<Task[]>([]);
@@ -39,10 +46,6 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const storedName = this.authService.getUserName();
-    if (storedName) {
-      this.username.set(storedName);
-    }
     this.loadDashboardData();
   }
 
@@ -73,12 +76,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getGreeting(): string {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 18) return 'Good Afternoon';
-    return 'Good Evening';
-  }
 
   // Dashboard Interactivity Methods
   onStatusChanged(taskId: string) {
@@ -88,7 +85,7 @@ export class HomeComponent implements OnInit {
       this.taskService.updateTask(taskId, { isDone: newStatus }).subscribe({
         next: () => {
           this.toastService.showToast(`Task marked as ${newStatus ? 'completed' : 'pending'}`, 'success');
-          this.loadDashboardData(); // Refresh to update stats and remove from urgent
+          this.loadDashboardData(); 
         },
         error: (err) => {
           console.error('Failed to update task status', err);

@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-carousel',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.css',
@@ -27,7 +26,7 @@ export class CarouselComponent implements OnInit, OnDestroy {
     },
   ];
 
-  currentIndex = 0;
+  currentIndex = signal(0);
   private intervalId: any;
 
   ngOnInit() {
@@ -51,15 +50,15 @@ export class CarouselComponent implements OnInit, OnDestroy {
   }
 
   next() {
-    this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+    this.currentIndex.update(i => (i + 1) % this.slides.length);
   }
 
   prev() {
-    this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+    this.currentIndex.update(i => (i - 1 + this.slides.length) % this.slides.length);
   }
 
   goTo(index: number) {
-    this.currentIndex = index;
+    this.currentIndex.set(index);
     this.stopAutoPlay();
     this.startAutoPlay();
   }

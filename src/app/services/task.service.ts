@@ -26,19 +26,20 @@ export class TaskService {
 
     return this.http.get<Task[]>(`${this.apiUrl}/tasks`, { params, observe: 'response' }).pipe(
       map((res: HttpResponse<Task[]>) => {
-        const totalCount = Number(res.headers.get('X-Total-Count') || 0);
         const data = res.body || [];
+        const headerCount = res.headers.get('X-Total-Count') || res.headers.get('x-total-count');
+        const totalCount = headerCount ? Number(headerCount) : data.length;
         
-        // If we are paginating, return the wrapper expected by the component
         if (queryParams?._page && queryParams?._limit) {
+          const totalPages = Math.ceil(totalCount / queryParams._limit);
           return {
             data,
             items: totalCount,
-            pages: Math.ceil(totalCount / queryParams._limit),
+            pages: totalPages || 1,
             first: 1,
-            last: Math.ceil(totalCount / queryParams._limit),
+            last: totalPages || 1,
             prev: queryParams._page > 1 ? queryParams._page - 1 : null,
-            next: queryParams._page < Math.ceil(totalCount / queryParams._limit) ? queryParams._page + 1 : null
+            next: queryParams._page < totalPages ? queryParams._page + 1 : null
           } as PaginatedResponse<Task>;
         }
         
