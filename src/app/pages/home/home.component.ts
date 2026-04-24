@@ -19,14 +19,13 @@ import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 })
 export class HomeComponent implements OnInit {
   username = signal<string>('Guest');
-  tasks = signal<Task[]>([]);
-
+  totalTasks = signal<number>(0);
+  completedTasks = signal<number>(0);
+  urgentTasks = signal<Task[]>([]);
+  
   // Computed Stats
-  totalTasks = computed(() => this.tasks().length);
-  completedTasks = computed(() => this.tasks().filter((t) => t.isDone).length);
   pendingTasks = computed(() => this.totalTasks() - this.completedTasks());
   completionPercentage = computed(() => this.totalTasks() ? Math.round((this.completedTasks() / this.totalTasks()) * 100) : 0);
-  urgentTasks = computed(() => this.tasks().filter(t => !t.isDone && t.priority === 'High').slice(0, 3));
 
   // Modal State
   isModalOpen = false;
@@ -44,16 +43,33 @@ export class HomeComponent implements OnInit {
     if (storedName) {
       this.username.set(storedName);
     }
-    
-    this.loadTasks();
+    this.loadDashboardData();
   }
 
-  loadTasks() {
-    this.taskService.getTasks().subscribe({
-      next: (fetchedTasks) => {
-        this.tasks.set(fetchedTasks);
-      },
-      error: (err) => console.error('Failed to load tasks', err)
+  loadDashboardData() {
+    // Fetch total tasks
+    this.taskService.getTasks({ _page: 1, _limit: 1 }).subscribe({
+      next: (res) => {
+        this.totalTasks.set(Array.isArray(res) ? res.length : (res as any).items);
+      }
+    });
+
+    // Fetch completed tasks
+    this.taskService.getTasks({ _page: 1, _limit: 1, isDone: true }).subscribe({
+      next: (res) => {
+        this.completedTasks.set(Array.isArray(res) ? res.length : (res as any).items);
+      }
+    });
+
+    // Fetch urgent tasks
+    this.taskService.getTasks({ _page: 1, _limit: 3, priority: 'High', isDone: false, _sort: 'dueDate', _order: 'desc' }).subscribe({
+      next: (res) => {
+        if (Array.isArray(res)) {
+          this.urgentTasks.set(res.slice(0, 3));
+        } else {
+          this.urgentTasks.set((res as any).data);
+        }
+      }
     });
   }
 
@@ -66,15 +82,13 @@ export class HomeComponent implements OnInit {
 
   // Dashboard Interactivity Methods
   onStatusChanged(taskId: string) {
-    const currentTasks = this.tasks();
-    const task = currentTasks.find((t) => t.id === taskId);
-    
+    const task = this.urgentTasks().find((t) => t.id === taskId);
     if (task) {
       const newStatus = !task.isDone;
       this.taskService.updateTask(taskId, { isDone: newStatus }).subscribe({
         next: () => {
-          this.tasks.update(tasks => tasks.map(t => t.id === taskId ? { ...t, isDone: newStatus } : t));
           this.toastService.showToast(`Task marked as ${newStatus ? 'completed' : 'pending'}`, 'success');
+          this.loadDashboardData(); // Refresh to update stats and remove from urgent
         },
         error: (err) => {
           console.error('Failed to update task status', err);
@@ -95,15 +109,12 @@ export class HomeComponent implements OnInit {
   }
 
   onTaskSaved(task: Task) {
-    const currentTasks = this.tasks();
-    const existingTask = currentTasks.find((t) => t.id === task.id);
-    
-    if (existingTask) {
+    if (task.id) {
       this.taskService.updateTask(task.id, task).subscribe({
         next: () => {
-          this.tasks.update(tasks => tasks.map(t => t.id === task.id ? task : t));
           this.isModalOpen = false;
           this.toastService.showToast('Task updated successfully', 'success');
+          this.loadDashboardData();
         },
         error: (err) => {
           console.error('Failed to update task', err);
@@ -112,10 +123,10 @@ export class HomeComponent implements OnInit {
       });
     } else {
       this.taskService.createTask(task).subscribe({
-        next: (createdTask) => {
-          this.tasks.update(tasks => [...tasks, createdTask]);
+        next: () => {
           this.isModalOpen = false;
           this.toastService.showToast('Task created successfully', 'success');
+          this.loadDashboardData();
         },
         error: (err) => {
           console.error('Failed to create task', err);
@@ -136,8 +147,8 @@ export class HomeComponent implements OnInit {
     if (confirmed) {
       this.taskService.deleteTask(task.id).subscribe({
         next: () => {
-          this.tasks.update(tasks => tasks.filter(t => t.id !== task.id));
           this.toastService.showToast('Task deleted successfully', 'success');
+          this.loadDashboardData();
         },
         error: (err) => {
           console.error('Failed to delete task', err);

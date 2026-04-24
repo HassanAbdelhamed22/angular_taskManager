@@ -17,10 +17,10 @@
     {
       "id": "393993d9-c66c-43ab-9abd-feedf3333042",
       "userId": 1,
-      "title": "Hassan Task",
+      "title": "Task",
       "description": "",
       "priority": "Medium",
-      "dueDate": "",
+      "dueDate": "2026-04-25",
       "category": "Personal",
       "tags": "",
       "isDone": false
@@ -45,6 +45,17 @@
       "dueDate": "2026-04-24",
       "category": "Work",
       "tags": "AI, Stydy",
+      "isDone": false
+    },
+    {
+      "id": "43bca75c-a40e-4839-90d8-70672b2e2005",
+      "userId": 1,
+      "title": "test",
+      "description": "",
+      "priority": "Medium",
+      "dueDate": "2026-04-30",
+      "category": "Study",
+      "tags": "test",
       "isDone": false
     }
   ]

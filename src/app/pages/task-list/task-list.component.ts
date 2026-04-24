@@ -10,17 +10,20 @@ import {
   computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TabsComponent } from '../../components/tabs/tabs.component';
-import { Task } from '../../models/task.model';
+import { Task, TaskQueryParams, PaginatedResponse } from '../../models/task.model';
 import { TaskInputComponent } from '../../components/task-input/task-input.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCardComponent, TabsComponent, CommonModule, TaskInputComponent],
+  standalone: true,
+  imports: [TaskCardComponent, TabsComponent, CommonModule, FormsModule, TaskInputComponent, PaginationComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
 })
@@ -33,21 +36,21 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   // State using Signals
   tasks = signal<Task[]>([]);
-  filter = signal<'all' | 'not_done' | 'done'>('all');
+  filterStatus = signal<'all' | 'not_done' | 'done'>('all');
+  
+  // Pagination & Filters
+  currentPage = signal(1);
+  perPage = signal(10);
+  totalItems = signal(0);
+  totalPages = signal(0);
+  searchQuery = signal('');
+  filterPriority = signal('');
+  sortBy = signal('dueDate_asc');
 
-  // Computed Values
-  filteredTasks = computed(() => {
-    const currentTasks = this.tasks();
-    const currentFilter = this.filter();
-    
-    if (currentFilter === 'all') return currentTasks;
-    if (currentFilter === 'not_done') return currentTasks.filter(t => !t.isDone);
-    if (currentFilter === 'done') return currentTasks.filter(t => t.isDone);
-    return currentTasks;
-  });
-
-  notDoneCount = computed(() => this.tasks().filter(t => !t.isDone).length);
-  doneCount = computed(() => this.tasks().filter(t => t.isDone).length);
+  // We fetch counts globally so tabs look correct
+  allCount = signal(0);
+  notDoneCount = signal(0);
+  doneCount = signal(0);
 
   // Modal State
   isModalOpen = false;
@@ -59,10 +62,55 @@ export class TaskListComponent implements OnInit, OnChanges {
     private confirmDialogService: ConfirmDialogService
   ) {}
 
+  ngOnInit(): void {
+    this.loadGlobalCounts();
+    this.loadTasks();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes['incomingTask'] && changes['incomingTask'].currentValue) || (changes['deletedTaskId'] && changes['deletedTaskId'].currentValue)) {
+      this.loadGlobalCounts();
+      this.loadTasks();
+    }
+  }
+
+  private loadGlobalCounts() {
+    this.taskService.getTasks({ _page: 1, _limit: 1 }).subscribe(res => this.allCount.set(Array.isArray(res) ? res.length : (res as any).items));
+    this.taskService.getTasks({ _page: 1, _limit: 1, isDone: false }).subscribe(res => this.notDoneCount.set(Array.isArray(res) ? res.length : (res as any).items));
+    this.taskService.getTasks({ _page: 1, _limit: 1, isDone: true }).subscribe(res => this.doneCount.set(Array.isArray(res) ? res.length : (res as any).items));
+  }
+
   private loadTasks() {
-    this.taskService.getTasks().subscribe({
-      next: (fetchedTasks) => {
-        this.tasks.set(fetchedTasks);
+    const sortVal = this.sortBy().split('_');
+    const params: TaskQueryParams = {
+      _page: this.currentPage(),
+      _limit: this.perPage(),
+      _sort: sortVal[0],
+      _order: sortVal[1]
+    };
+
+    if (this.searchQuery()) params.title_like = this.searchQuery();
+    if (this.filterPriority()) params.priority = this.filterPriority();
+    
+    const status = this.filterStatus();
+    if (status === 'done') params.isDone = true;
+    else if (status === 'not_done') params.isDone = false;
+    else {
+      // For 'all', we don't send isDone to get both
+    }
+
+    this.taskService.getTasks(params).subscribe({
+      next: (res) => {
+        if ('data' in res) {
+          this.tasks.set(res.data);
+          this.totalItems.set(res.items);
+          this.totalPages.set(res.pages);
+        } else {
+          // fallback
+          this.tasks.set(res as Task[]);
+          this.totalItems.set((res as Task[]).length);
+          this.totalPages.set(1);
+        }
       },
       error: (err) => {
         console.error('Failed to load tasks', err);
@@ -72,23 +120,47 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   setFilter(newFilter: 'all' | 'not_done' | 'done') {
-    this.filter.set(newFilter);
+    this.filterStatus.set(newFilter);
+    this.currentPage.set(1);
+    this.loadTasks();
+  }
+
+  onSearchChange() {
+    this.currentPage.set(1);
+    this.loadTasks();
+  }
+
+  onFilterPriorityChange() {
+    this.currentPage.set(1);
+    this.loadTasks();
+  }
+
+  onSortChange() {
+    this.currentPage.set(1);
+    this.loadTasks();
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+      this.loadTasks();
+    }
+  }
+
+  getPageArray() {
+    return Array(this.totalPages()).fill(0).map((x, i) => i + 1);
   }
 
   onStatusChanged(taskId: string) {
-    const currentTasks = this.tasks();
-    const task = currentTasks.find((t) => t.id === taskId);
-    
+    const task = this.tasks().find((t) => t.id === taskId);
     if (task) {
       const newStatus = !task.isDone;
       this.taskService.updateTask(taskId, { isDone: newStatus }).subscribe({
         next: () => {
-          // Update the signal immutably
-          this.tasks.update(tasks => 
-            tasks.map(t => t.id === taskId ? { ...t, isDone: newStatus } : t)
-          );
-          this.statusChanged.emit(taskId);
           this.toastService.showToast(`Task marked as ${newStatus ? 'completed' : 'pending'}`, 'success');
+          this.statusChanged.emit(taskId);
+          this.loadGlobalCounts();
+          this.loadTasks();
         },
         error: (err) => {
           console.error('Failed to update task status', err);
@@ -114,17 +186,13 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   onTaskSaved(task: Task) {
-    const currentTasks = this.tasks();
-    const existingTask = currentTasks.find((t) => t.id === task.id);
-    
-    if (existingTask) {
+    if (task.id) {
       this.taskService.updateTask(task.id, task).subscribe({
         next: () => {
-          this.tasks.update(tasks => 
-            tasks.map(t => t.id === task.id ? task : t)
-          );
           this.isModalOpen = false;
           this.toastService.showToast('Task updated successfully', 'success');
+          this.loadGlobalCounts();
+          this.loadTasks();
         },
         error: (err) => {
           console.error('Failed to update task', err);
@@ -133,11 +201,11 @@ export class TaskListComponent implements OnInit, OnChanges {
       });
     } else {
       this.taskService.createTask(task).subscribe({
-        next: (createdTask) => {
-          // Add to signal immutably
-          this.tasks.update(tasks => [...tasks, createdTask]);
+        next: () => {
           this.isModalOpen = false;
           this.toastService.showToast('Task created successfully', 'success');
+          this.loadGlobalCounts();
+          this.loadTasks();
         },
         error: (err) => {
           console.error('Failed to create task', err);
@@ -158,9 +226,10 @@ export class TaskListComponent implements OnInit, OnChanges {
     if (confirmed) {
       this.taskService.deleteTask(task.id).subscribe({
         next: () => {
-          this.tasks.update(tasks => tasks.filter(t => t.id !== task.id));
           this.taskDestroyedAlert.emit(`Task "${task.title}" was deleted.`);
           this.toastService.showToast('Task deleted successfully', 'success');
+          this.loadGlobalCounts();
+          this.loadTasks();
         },
         error: (err) => {
           console.error('Failed to delete task', err);
@@ -176,19 +245,5 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   trackByFn(index: number, task: Task) {
     return task.id;
-  }
-
-  ngOnInit(): void {
-    this.loadTasks();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['incomingTask'] && changes['incomingTask'].currentValue) {
-      this.loadTasks();
-    }
-    
-    if (changes['deletedTaskId'] && changes['deletedTaskId'].currentValue) {
-      this.tasks.update(tasks => tasks.filter(t => t.id !== changes['deletedTaskId'].currentValue));
-    }
   }
 }

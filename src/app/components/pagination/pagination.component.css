@@ -1,0 +1,81 @@
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.page-btn {
+  min-width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e3e0da;
+  background-color: #ffffff;
+  color: #3f3a34;
+  border-radius: 50%; /* Circle style like the rest of the app */
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  font-family: inherit;
+}
+
+.page-btn:hover:not([disabled]):not(.ellipsis) {
+  background-color: #f4f3ef;
+  border-color: #d0ccc5;
+  transform: translateY(-1px);
+}
+
+.page-btn.active {
+  background-color: #6b8e82;
+  color: #ffffff;
+  border-color: #6b8e82;
+  box-shadow: 0 2px 6px rgba(107, 142, 130, 0.3);
+}
+
+.page-btn.ellipsis {
+  background: transparent;
+  border: none;
+  cursor: default;
+  color: #928b81;
+}
+
+.nav-btn {
+  background-color: #ffffff;
+  color: #6b8e82;
+  border: 1px solid #e3e0da;
+  border-radius: 20px;
+  padding: 0 16px;
+  min-width: auto;
+  height: 36px;
+}
+
+.nav-btn:hover:not([disabled]) {
+  background-color: #6b8e82;
+  color: #ffffff;
+  border-color: #6b8e82;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+@media (max-width: 640px) {
+  .page-btn:not(.active):not(.nav-btn):not(.ellipsis) {
+    display: none;
+  }
+}
