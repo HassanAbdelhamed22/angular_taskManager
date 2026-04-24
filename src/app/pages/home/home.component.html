@@ -1,0 +1,95 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section entrance-animation">
+    <div class="welcome-card">
+      <div class="card-glow"></div>
+      <div class="welcome-text">
+        <span class="greeting-pill">{{ greeting() }}</span>
+        <h1>Welcome back, <span class="username">{{ username() }}</span></h1>
+        <p class="hero-subtitle">
+          Ready to conquer your goals? You have <strong>{{ pendingTasks() }}</strong> tasks waiting for your attention today.
+        </p>
+        <div class="hero-actions">
+          <button routerLink="/tasks" class="btn-primary">
+            <i class="fas fa-th-list"></i> View Tasks
+          </button>
+          <button routerLink="/add-task" class="btn-secondary">
+            <i class="fas fa-plus"></i> Create New Task
+          </button>
+        </div>
+      </div>
+      <div class="stats-overview">
+        <div class="progress-ring-container">
+          <svg class="progress-ring" viewBox="0 0 100 100">
+            <circle class="progress-ring-bg" cx="50" cy="50" r="40"></circle>
+            <circle 
+              class="progress-ring-fill" 
+              cx="50" cy="50" r="40" 
+              [attr.stroke-dasharray]="251.2"
+              [attr.stroke-dashoffset]="251.2 - (251.2 * completionPercentage()) / 100"
+            ></circle>
+          </svg>
+          <div class="progress-ring-text">
+            <span>{{ completionPercentage() }}%</span>
+          </div>
+        </div>
+        <div class="stats-details">
+          <div class="stat-item">
+            <div class="stat-value">{{ totalTasks() }}</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value">{{ completedTasks() }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- Urgent Tasks -->
+    <section class="urgent-tasks-section entrance-fade" style="animation-delay: 0.2s">
+      <div class="section-header-left">
+        <h2>Urgent <span class="accent">Tasks</span></h2>
+        <p>High priority items needing your attention.</p>
+      </div>
+      
+      <div class="urgent-tasks-list">
+        @if (urgentTasks().length === 0) {
+          <div class="empty-state-compact">
+            <div class="empty-emoji">✨</div>
+            <p>No urgent tasks. Great job!</p>
+          </div>
+        } @else {
+          @for (task of urgentTasks(); track task.id) {
+            <app-task-card
+              [task]="task"
+              (statusChanged)="onStatusChanged($event)"
+              (deleteTask)="deleteTaskFn(task)"
+              (editTask)="editTaskFn(task)"
+            ></app-task-card>
+          }
+        }
+      </div>
+    </section>
+
+    <!-- Carousel Section -->
+    <section class="carousel-section entrance-fade" style="animation-delay: 0.3s">
+      <div class="section-header-left">
+        <h2>Featured <span class="accent">Insights</span></h2>
+        <p>Stay motivated and focused.</p>
+      </div>
+      <app-carousel></app-carousel>
+    </section>
+  </div>
+</div>
+
+<app-task-input
+  *ngIf="isModalOpen"
+  [taskFormData]="taskFormData"
+  (closeModal)="closeModal()"
+  (taskCreated)="onTaskSaved($event)"
+></app-task-input>

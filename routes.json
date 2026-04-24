@@ -1,0 +1,6 @@
+{
+  "/users": "/600/users",
+  "/users/*": "/600/users/$1",
+  "/tasks": "/660/tasks",
+  "/tasks/*": "/660/tasks/$1"
+}

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth-guard';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -7,18 +7,18 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./components/login/login').then((m) => m.LoginComponent),
+      import('./pages/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./components/register/register').then((m) => m.RegisterComponent),
+      import('./pages/register/register.component').then((m) => m.RegisterComponent),
   },
 
   {
     path: '',
     loadComponent: () =>
-      import('./components/layout/main-layout/main-layout').then(
+      import('./layout/main-layout/main-layout.component').then(
         (m) => m.MainLayoutComponent
       ),
     canActivate: [authGuard],
@@ -26,17 +26,21 @@ export const routes: Routes = [
       {
         path: 'home',
         loadComponent: () =>
-          import('./components/home/home').then((m) => m.HomeComponent),
+          import('./pages/home/home.component').then((m) => m.HomeComponent),
       },
       {
         path: 'tasks',
         loadComponent: () =>
-          import('./components/taskList/taskList').then((m) => m.TaskListComponent),
+          import('./pages/task-list/task-list.component').then(
+            (m) => m.TaskListComponent
+          ),
       },
       {
         path: 'add-task',
         loadComponent: () =>
-          import('./components/add-task/add-task').then((m) => m.AddTaskComponent),
+          import('./pages/add-task/add-task.component').then(
+            (m) => m.AddTaskComponent
+          ),
       },
     ],
   },
@@ -44,8 +48,9 @@ export const routes: Routes = [
   {
     path: '404',
     loadComponent: () =>
-      import('./components/not-found/not-found').then((m) => m.NotFoundComponent),
+      import('./pages/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
   },
   { path: '**', redirectTo: '404' },
 ];
-

@@ -1,0 +1,7 @@
+<div class="add-task-container">
+  <app-task-input
+    [taskFormData]="taskData"
+    [isModal]="false"
+    (taskCreated)="handleSubmit($event)"
+  ></app-task-input>
+</div>
